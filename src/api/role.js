@@ -4,15 +4,15 @@ export function getRoles() {
   return request({
     url: 'permission/roles',
     method: 'get',
-    params: { page: 1, limit: 10 }
+    params: { page: 1, limit: 100 }
   })
 }
 
-export function getDatas(page, limit) {
+export function getDatas(data) {
   return request({
     url: 'permission/roles',
     method: 'get',
-    params: { page: page, limit: limit }
+    params: data
   })
 }
 

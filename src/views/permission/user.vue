@@ -1,9 +1,17 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">用户管理</div>
+      <div slot="header">管理员列表</div>
       <el-form :inline="true">
-        <el-button type="success" size="small" @click="handleAddData">新增</el-button>
+        <div class="filter-container">
+          <el-input v-model="listQuery.keyword" placeholder="用户名/手机号/邮箱" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+            搜索
+          </el-button>
+          <el-button class="filter-item" style="margin-left: 0px;" type="success" icon="el-icon-edit" @click="handleCreate">
+            新增
+          </el-button>
+        </div>
       </el-form>
       <el-table v-loading="loading" :data="list" style="width: 100%;" stripe>
         <el-table-column align="left" label="ID" width="100">
@@ -40,7 +48,7 @@
         :page-sizes="[10, 50, 100, 200]"
         :page-size="10"
         @current-change="handleCurrentChange"
-        :current-page="page"
+        :current-page="listQuery.page"
         @size-change="handleSizeChange"
         :total="total">
       </el-pagination>
@@ -91,14 +99,14 @@ export default {
   data() {
     return {
       loading: false,
-      queryForm: {
-        username: ''
-      },
-      data: Object.assign({}, defaultData),
       list: [],
       total: 0,
-      limit: 10,
-      page: 1,
+      listQuery: {
+        page: 1,
+        limit: 10,
+        keyword: ''
+      },
+      data: Object.assign({}, defaultData),
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false,
@@ -113,28 +121,32 @@ export default {
   methods: {
     async getList() {
       this.loading = true
-      const res = await getDatas(this.page, this.limit)
+      const res = await getDatas(this.listQuery)
       this.list = res.data.data
       this.total = res.data.total
-      this.page = res.data.current_page
+      this.listQuery.page = res.data.current_page
       this.loading = false
     },
     async getRoles() {
       const res = await getRoles()
       this.rolesList = res.data.data
     },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
     handleCheckedChange(val) {
       this.data.roles = val
     },
     handleSizeChange(val) {
-      this.limit = val
+      this.listQuery.limit = val
       this.getList()
     },
     handleCurrentChange(val) {
-      this.page = val
+      this.listQuery.page = val
       this.getList()
     },
-    handleAddData() {
+    handleCreate() {
       this.data = Object.assign({}, defaultData)
       this.dialogType = 'new'
       this.dialogVisible = true

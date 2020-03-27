@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-export function getDatas(page, limit) {
+export function getDatas(data) {
   return request({
     url: 'permission/users',
     method: 'get',
-    params: { page: page, limit: limit }
+    params: data
   })
 }
 

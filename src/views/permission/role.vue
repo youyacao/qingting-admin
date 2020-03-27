@@ -34,7 +34,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :page-sizes="[10, 50, 100, 200]"
         :page-size="10"
-        :current-page="page"
+        :current-page="listQuery.page"
         :total="total"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
@@ -76,14 +76,13 @@ export default {
   data() {
     return {
       loading: false,
-      queryForm: {
-        name: ''
-      },
-      data: Object.assign({}, defaultData),
       list: [],
       total: 0,
-      limit: 10,
-      page: 1,
+      listQuery: {
+        page: 1,
+        limit: 10
+      },
+      data: Object.assign({}, defaultData),
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false
@@ -99,15 +98,15 @@ export default {
       const res = await getDatas(this.page, this.limit)
       this.list = res.data.data
       this.total = res.data.total
-      this.page = res.data.current_page
+      this.listQuery.page = res.data.current_page
       this.loading = false
     },
     handleSizeChange(val) {
-      this.limit = val
+      this.listQuery.limit = val
       this.getList()
     },
     handleCurrentChange(val) {
-      this.page = val
+      this.listQuery.page = val
       this.getList()
     },
     handleAddData() {
