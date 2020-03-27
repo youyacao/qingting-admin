@@ -62,32 +62,46 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/system',
+    path: '/user',
     component: Layout,
-    redirect: '/system/email',
+    redirect: '/user/index',
     alwaysShow: true, // will always show the root menu
-    name: 'System',
+    name: 'user',
     meta: {
-      title: '系统配置',
+      title: '用户管理',
+      icon: 'user',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'index',
+        // component: () => import('@/views/user/index'),
+        name: 'Index',
+        meta: {
+          title: '用户列表',
+          roles: ['admin', 'editor']
+        }
+      }
+    ]
+  },
+  {
+    path: '/config',
+    component: Layout,
+    redirect: '/config/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'config',
+    meta: {
+      title: '站点配置',
       icon: 'example',
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
-        path: 'email',
-        component: () => import('@/views/system/email'),
-        name: 'Email',
+        path: 'index',
+        component: () => import('@/views/config/index'),
+        name: 'Index',
         meta: {
-          title: '邮箱配置',
-          roles: ['admin', 'editor']
-        }
-      },
-      {
-        path: 'sms',
-        // component: () => import('@/views/system/sms'),
-        name: 'Sms',
-        meta: {
-          title: '短信配置',
+          title: '基础配置',
           roles: ['admin', 'editor']
         }
       }
