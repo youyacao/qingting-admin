@@ -75,10 +75,19 @@ export const asyncRoutes = [
     children: [
       {
         path: 'email',
-        // component: () => import('@/views/permission/user'),
+        component: () => import('@/views/system/email'),
         name: 'Email',
         meta: {
           title: '邮箱配置',
+          roles: ['admin', 'editor']
+        }
+      },
+      {
+        path: 'sms',
+        // component: () => import('@/views/system/sms'),
+        name: 'Sms',
+        meta: {
+          title: '短信配置',
           roles: ['admin', 'editor']
         }
       }
