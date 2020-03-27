@@ -75,7 +75,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        // component: () => import('@/views/user/index'),
+        component: () => import('@/views/user/index'),
         name: 'Index',
         meta: {
           title: '用户列表',
