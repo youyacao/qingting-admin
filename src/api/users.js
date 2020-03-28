@@ -45,3 +45,11 @@ export function updateProfile(data) {
     data
   })
 }
+
+export function batchDisable(data) {
+  return request({
+    url: `permission/users/batchDisable`,
+    method: 'post',
+    data
+  })
+}
