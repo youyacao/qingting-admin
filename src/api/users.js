@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getData(id) {
+  return request({
+    url: `permission/users/${id}`,
+    method: 'get'
+  })
+}
+
 export function getDatas(data) {
   return request({
     url: 'permission/users',
@@ -28,5 +35,13 @@ export function deleteData(id) {
   return request({
     url: `permission/users/${id}`,
     method: 'delete'
+  })
+}
+
+export function updateProfile(data) {
+  return request({
+    url: `permission/users/profile`,
+    method: 'post',
+    data
   })
 }

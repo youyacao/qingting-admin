@@ -15,6 +15,14 @@ export function getInfo() {
   })
 }
 
+export function forget(data) {
+  return request({
+    url: 'forget',
+    method: 'post',
+    data
+  })
+}
+
 export function logout() {
   return request({
     url: 'logout',

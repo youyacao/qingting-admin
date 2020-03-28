@@ -81,6 +81,16 @@ export const asyncRoutes = [
           title: '用户列表',
           roles: ['admin', 'editor']
         }
+      },
+      {
+        path: 'profile',
+        component: () => import('@/views/user/profile'),
+        hidden: true
+      },
+      {
+        path: 'forget',
+        component: () => import('@/views/user/forget'),
+        hidden: true
       }
     ]
   },

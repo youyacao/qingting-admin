@@ -15,7 +15,7 @@
       <el-tab-pane label="邮箱配置" name="email">
         <el-form ref="form" :model="form" label-width="200px">
           <el-form-item label="发信人账号">
-            <el-input v-model="form.email_account" size="small" autocomplete="off" />
+            <el-input v-model="form.email_account" autocomplete="off" />
           </el-form-item>
           <el-form-item label="发信人密码">
             <el-input v-model="form.email_password" autocomplete="off" />
@@ -56,7 +56,7 @@ export default {
       activeTab: 'index',
       loading: false,
       form: {
-        base_site_status: true,
+        base_site_status: false,
         email_account: '',
         email_password: '',
         email_name: '',
@@ -89,8 +89,12 @@ export default {
       this.form.email_code_template = res.data.email_code_template
     },
     async onSubmit() {
+      if (this.loading) {
+        return
+      }
       this.loading = true
       const res = await saveData(this.form)
+      this.loading = false
       this.$message({
         type: (res.code === 200) ? 'success' : 'error',
         message: res.msg

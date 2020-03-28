@@ -1,0 +1,60 @@
+<template>
+  <div class="app-container">
+    <el-card>
+      <div slot="header">修改密码</div>
+      <el-form ref="form" :model="form" label-width="200px">
+        <el-form-item label="密码">
+          <el-input v-model="form.password" show-password autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="确认密码">
+          <el-input v-model="form.password_comfirm" show-password autocomplete="off" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">保 存</el-button>
+          <el-button @click="onBack">返 回</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import { forget } from '../../api/user'
+export default {
+  data() {
+    return {
+      activeTab: 'index',
+      loading: false,
+      form: {
+        password: '',
+        password_comfirm: ''
+      }
+    }
+  },
+  created() {
+  },
+  methods: {
+    async onSubmit() {
+      if (this.form.password !== this.form.password_comfirm) {
+        this.$message({
+          type: 'error',
+          message: '两次密码不一样'
+        })
+      }
+      if (this.loading) {
+        return
+      }
+      this.loading = true
+      const res = await forget(this.form)
+      this.loading = false
+      this.$message({
+        type: (res.code === 200) ? 'success' : 'error',
+        message: res.msg
+      })
+    },
+    onBack() {
+      this.$router.go(-1)
+    }
+  }
+}
+</script>
