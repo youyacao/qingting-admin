@@ -34,6 +34,21 @@
             {{ scope.row.email }}
           </template>
         </el-table-column>
+        <el-table-column align="center" label="VIP过期时间">
+          <template slot-scope="scope">
+            {{ (scope.row.vip_end_time === '0000-00-00') ? '未开通':scope.row.vip_end_time }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="邀请码">
+          <template slot-scope="scope">
+            {{ scope.row.refcode }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="最后一次登录时间">
+          <template slot-scope="scope">
+            {{ (scope.row.last_login_time === '0000-00-00 00:00:00') ? '未登录':scope.row.last_login_time }}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="handleEdit(scope)">编 辑</el-button>
