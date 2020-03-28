@@ -29,14 +29,8 @@
           <el-form-item label="发信人名称">
             <el-input v-model="form.email_name" />
           </el-form-item>
-          <el-form-item label="发送间隔时间(秒)">
-            <el-input v-model="form.email_interval_time" />
-          </el-form-item>
           <el-form-item label="有效时间(秒)">
             <el-input v-model="form.email_valid_time" />
-          </el-form-item>
-          <el-form-item label="每天最多错误次数">
-            <el-input v-model="form.email_day_error_time" />
           </el-form-item>
           <el-form-item label="注册验证码模板">
             <el-input v-model="form.email_code_template" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="{验证码} 为自动替换" />
