@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card>
       <div slot="header">修改密码</div>
-      <el-form ref="form" :model="form" label-width="200px">
+      <el-form ref="form" :model="form" label-width="140px">
         <el-form-item label="密码">
           <el-input v-model="form.password" show-password autocomplete="off" />
         </el-form-item>

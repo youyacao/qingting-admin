@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card>
       <div slot="header">个人设置</div>
-      <el-form ref="form" :model="form" label-width="200px">
+      <el-form ref="form" :model="form" label-width="140px">
         <el-form-item label="用户名">
           <el-input v-model="form.username" :disabled="true" autocomplete="off" />
         </el-form-item>

@@ -23,7 +23,7 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="left" label="用户名">
+        <el-table-column align="center" label="用户名">
           <template slot-scope="scope">
             {{ scope.row.username }}
           </template>
@@ -85,7 +85,7 @@
       />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
-      <el-form :model="data" label-width="80px" label-position="left">
+      <el-form :model="data" label-width="140px">
         <el-form-item label="用户名">
           <el-input v-model="data.username" placeholder="用户名" />
         </el-form-item>
@@ -97,6 +97,9 @@
         </el-form-item>
         <el-form-item label="邮箱">
           <el-input v-model="data.email" placeholder="邮箱" />
+        </el-form-item>
+        <el-form-item label="VIP过期时间">
+          <el-date-picker v-model="data.vip_end_time" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -116,7 +119,8 @@ const defaultData = {
   username: '',
   password: '',
   phone: '',
-  email: ''
+  email: '',
+  vip_end_time: ''
 }
 
 export default {
@@ -209,6 +213,9 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
+      if (this.data.vip_end_time === '0000-00-00') {
+        this.data.vip_end_time = ''
+      }
       this.checkedRoles = this.data.roles
       this.$nextTick(() => {
         this.checkStrictly = false

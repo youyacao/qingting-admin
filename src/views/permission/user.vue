@@ -47,14 +47,14 @@
         layout="total, sizes, prev, pager, next, jumper"
         :page-sizes="[10, 50, 100, 200]"
         :page-size="10"
-        @current-change="handleCurrentChange"
         :current-page="listQuery.page"
+        :total="total"
+        @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
-        :total="total">
-      </el-pagination>
+      />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
-      <el-form :model="data" label-width="80px" label-position="left">
+      <el-form :model="data" label-width="140px">
         <el-form-item label="用户名">
           <el-input v-model="data.username" placeholder="用户名" />
         </el-form-item>

@@ -41,7 +41,7 @@
       />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑角色':'新增角色'">
-      <el-form :model="data" label-width="80px" label-position="left">
+      <el-form :model="data" label-width="140px">
         <el-form-item label="角色名称">
           <el-input v-model="data.name" placeholder="角色名称" />
         </el-form-item>
