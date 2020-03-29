@@ -23,7 +23,6 @@ import { forget } from '../../api/user'
 export default {
   data() {
     return {
-      activeTab: 'index',
       loading: false,
       form: {
         password: '',

@@ -40,7 +40,7 @@ export function deleteData(id) {
 
 export function updateProfile(data) {
   return request({
-    url: `permission/users/profile`,
+    url: `users/profile`,
     method: 'post',
     data
   })
@@ -48,7 +48,7 @@ export function updateProfile(data) {
 
 export function batchDisable(data) {
   return request({
-    url: `permission/users/batchDisable`,
+    url: `users/batchDisable`,
     method: 'post',
     data
   })
