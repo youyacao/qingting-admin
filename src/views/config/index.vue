@@ -41,6 +41,20 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <el-tab-pane label="上传配置" name="upload">
+        <el-form ref="form" :model="form" label-width="200px">
+          <el-form-item label="上传文件类型">
+            <el-input v-model="form.upload_file_ext" placeholder="用|分隔类型（如：png|jpg|gif）" />
+          </el-form-item>
+          <el-form-item label="上传文件大小限制（M）">
+            <el-input v-model="form.upload_max_size" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -62,7 +76,9 @@ export default {
         email_interval_time: 60,
         email_valid_time: 600,
         email_day_error_time: 5,
-        email_code_template: ''
+        email_code_template: '',
+        upload_file_ext: '',
+        upload_max_size: ''
       }
     }
   },
@@ -86,6 +102,8 @@ export default {
       this.form.email_valid_time = res.data.email_valid_time
       this.form.email_day_error_time = res.data.email_day_error_time
       this.form.email_code_template = res.data.email_code_template
+      this.form.upload_file_ext = res.data.upload_file_ext
+      this.form.upload_max_size = res.data.upload_max_size
     },
     async onSubmit() {
       if (this.loading) {

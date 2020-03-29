@@ -14,15 +14,16 @@
         </el-form-item>
         <el-form-item label="头像">
           <el-upload
+            ref="upload"
             class="avatar-uploader"
             :action="upAction"
             :headers="upHeaders"
             :limit="1"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
+            :on-success="handleSuccess"
+            :before-upload="beforeUpload"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <img v-if="imgUrl" :src="imgUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
@@ -50,9 +51,10 @@ export default {
         username: '',
         phone: '',
         email: '',
+        avatar: '',
         vip_end_time: ''
       },
-      imageUrl: '',
+      imgUrl: '',
       upAction: process.env.VUE_APP_BASE_API + '/upload',
       upHeaders: {
         Authorization: getToken()
@@ -68,6 +70,8 @@ export default {
       this.form.username = res.data.username
       this.form.phone = res.data.phone
       this.form.email = res.data.email
+      this.form.avatar = res.data.avatar
+      this.imgUrl = res.data.avatar
       if (res.data.vip_end_time !== '0000-00-00') {
         this.form.vip_end_time = res.data.vip_end_time
       }
@@ -87,19 +91,20 @@ export default {
     onBack() {
       this.$router.go(-1)
     },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+    handleSuccess(res, file) {
+      if (res.code === 200) {
+        this.form.avatar = res.data.img_url
+        this.imgUrl = URL.createObjectURL(file.raw)
+        this.$refs['upload'].clearFiles()
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+      }
     },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
+    beforeUpload(file) {
+      return true
     }
 
   }
