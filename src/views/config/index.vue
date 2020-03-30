@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-tabs v-model="activeTab" type="border-card">
-      <el-tab-pane label="基础配置" name="index">
+    <el-tabs v-model="activeTab" v-loading="loading" type="border-card">
+      <el-tab-pane label="基础配置" name="base">
         <el-form ref="form" :model="form" label-width="200px">
           <el-form-item label="站点状态">
             <el-switch v-model="form.base_site_status" active-color="#13ce66" inactive-color="#ff4949" />
@@ -41,6 +41,29 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <el-tab-pane label="短信配置" name="sms">
+        <el-form ref="form" :model="form" label-width="200px">
+          <el-form-item label="APPID">
+            <el-input v-model="form.sms_appid" />
+          </el-form-item>
+          <el-form-item label="APPKEY">
+            <el-input v-model="form.sms_appkey" />
+          </el-form-item>
+          <el-form-item label="有效时间(秒)">
+            <el-input v-model="form.sms_valid_time" />
+          </el-form-item>
+          <el-form-item label="每天最多错误次数">
+            <el-input v-model="form.sms_day_error_num" />
+          </el-form-item>
+          <el-form-item label="注册验证码模板">
+            <el-input v-model="form.sms_code_template" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="{验证码} 为自动替换" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
       <el-tab-pane label="上传配置" name="upload">
         <el-form ref="form" :model="form" label-width="200px">
           <el-form-item label="上传文件类型">
@@ -70,6 +93,51 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <el-tab-pane label="评论配置" name="comment">
+        <el-form ref="form" :model="form" label-width="200px">
+          <el-form-item label="评论需要过滤的关键字">
+            <el-input v-model="form.comment_forbid_keys" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="英文逗号分隔" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="视频配置" name="video">
+        <el-form ref="form" :model="form" label-width="200px">
+          <el-form-item label="观看视频是否要登录">
+            <el-switch v-model="form.video_need_login" active-color="#13ce66" inactive-color="#ff4949" />
+          </el-form-item>
+          <el-form-item label="免费试看次数">
+            <el-input v-model="form.video_free_see_time" placeholder="0代表不限制次数" />
+          </el-form-item>
+          <el-form-item label="免费试看时长">
+            <el-input v-model="form.video_free_see_duration" placeholder="0代表不限制时长" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="直播配置" name="live">
+        <el-form ref="form" :model="form" label-width="200px">
+          <el-form-item label="观看直播是否要登录">
+            <el-switch v-model="form.live_need_login" active-color="#13ce66" inactive-color="#ff4949" />
+          </el-form-item>
+          <el-form-item label="免费试看次数">
+            <el-input v-model="form.live_free_see_time" placeholder="0代表不限制次数" />
+          </el-form-item>
+          <el-form-item label="免费试看时长">
+            <el-input v-model="form.live_free_see_duration" placeholder="0代表不限制时长" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -79,7 +147,7 @@ import { saveData, getData } from '../../api/config'
 export default {
   data() {
     return {
-      activeTab: 'index',
+      activeTab: 'base',
       loading: false,
       form: {
         base_site_status: false,
@@ -92,13 +160,25 @@ export default {
         email_valid_time: 600,
         email_day_error_time: 5,
         email_code_template: '',
+        sms_appid: '',
+        sms_appkey: '',
+        sms_valid_time: '',
+        sms_day_error_num: '',
+        sms_code_template: '',
         upload_file_ext: '',
         upload_max_size: '',
         upload_qiniu_status: false,
         upload_qiniu_accessKey: '',
         upload_qiniu_secretKey: '',
         upload_qiniu_bucket: '',
-        upload_qiniu_domain: ''
+        upload_qiniu_domain: '',
+        comment_forbid_keys: '',
+        video_need_login: false,
+        video_free_see_time: '',
+        video_free_see_duration: '',
+        live_need_login: false,
+        live_free_see_time: '',
+        live_free_see_duration: ''
       }
     }
   },
@@ -122,6 +202,11 @@ export default {
       this.form.email_valid_time = res.data.email_valid_time
       this.form.email_day_error_time = res.data.email_day_error_time
       this.form.email_code_template = res.data.email_code_template
+      this.form.sms_appid = res.data.sms_appid
+      this.form.sms_appkey = res.data.sms_appkey
+      this.form.sms_valid_time = res.data.sms_valid_time
+      this.form.sms_day_error_num = res.data.sms_day_error_num
+      this.form.sms_code_template = res.data.sms_code_template
       this.form.upload_file_ext = res.data.upload_file_ext
       this.form.upload_max_size = res.data.upload_max_size
       if (res.data.upload_qiniu_status === '1') {
@@ -133,6 +218,21 @@ export default {
       this.form.upload_qiniu_secretKey = res.data.upload_qiniu_secretKey
       this.form.upload_qiniu_bucket = res.data.upload_qiniu_bucket
       this.form.upload_qiniu_domain = res.data.upload_qiniu_domain
+      this.form.comment_forbid_keys = res.data.comment_forbid_keys
+      if (res.data.video_need_login === '1') {
+        this.form.video_need_login = true
+      } else {
+        this.form.video_need_login = false
+      }
+      this.form.video_free_see_time = res.data.video_free_see_time
+      this.form.video_free_see_duration = res.data.video_free_see_duration
+      if (res.data.live_need_login === '1') {
+        this.form.live_need_login = true
+      } else {
+        this.form.live_need_login = false
+      }
+      this.form.live_free_see_time = res.data.live_free_see_time
+      this.form.live_free_see_duration = res.data.live_free_see_duration
     },
     async onSubmit() {
       if (this.loading) {

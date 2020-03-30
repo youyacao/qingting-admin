@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card>
       <div slot="header">个人设置</div>
-      <el-form ref="form" :model="form" label-width="140px">
+      <el-form ref="form" v-loading="loading" :model="form" label-width="140px">
         <el-form-item label="用户名">
           <el-input v-model="form.username" :disabled="true" autocomplete="off" />
         </el-form-item>
@@ -95,14 +95,17 @@ export default {
         this.form.avatar = res.data.img_url
         this.imgUrl = URL.createObjectURL(file.raw)
         this.$refs['upload'].clearFiles()
+        this.loading = false
       } else {
         this.$message({
           type: 'error',
           message: res.msg
         })
+        this.loading = false
       }
     },
     beforeUpload(file) {
+      this.loading = true
       return true
     }
 

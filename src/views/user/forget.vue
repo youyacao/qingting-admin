@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card>
       <div slot="header">修改密码</div>
-      <el-form ref="form" :model="form" label-width="140px">
+      <el-form ref="form" v-loading="loading" :model="form" label-width="140px">
         <el-form-item label="密码">
           <el-input v-model="form.password" show-password autocomplete="off" />
         </el-form-item>
@@ -34,11 +34,19 @@ export default {
   },
   methods: {
     async onSubmit() {
+      if (this.form.password === '') {
+        this.$message({
+          type: 'error',
+          message: '密码不能为空'
+        })
+        return
+      }
       if (this.form.password !== this.form.password_comfirm) {
         this.$message({
           type: 'error',
           message: '两次密码不一样'
         })
+        return
       }
       if (this.loading) {
         return
