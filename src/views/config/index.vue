@@ -93,7 +93,12 @@ export default {
         email_day_error_time: 5,
         email_code_template: '',
         upload_file_ext: '',
-        upload_max_size: ''
+        upload_max_size: '',
+        upload_qiniu_status: false,
+        upload_qiniu_accessKey: '',
+        upload_qiniu_secretKey: '',
+        upload_qiniu_bucket: '',
+        upload_qiniu_domain: ''
       }
     }
   },
@@ -119,6 +124,15 @@ export default {
       this.form.email_code_template = res.data.email_code_template
       this.form.upload_file_ext = res.data.upload_file_ext
       this.form.upload_max_size = res.data.upload_max_size
+      if (res.data.upload_qiniu_status === '1') {
+        this.form.upload_qiniu_status = true
+      } else {
+        this.form.upload_qiniu_status = false
+      }
+      this.form.upload_qiniu_accessKey = res.data.upload_qiniu_accessKey
+      this.form.upload_qiniu_secretKey = res.data.upload_qiniu_secretKey
+      this.form.upload_qiniu_bucket = res.data.upload_qiniu_bucket
+      this.form.upload_qiniu_domain = res.data.upload_qiniu_domain
     },
     async onSubmit() {
       if (this.loading) {
