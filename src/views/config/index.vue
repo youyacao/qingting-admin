@@ -49,6 +49,21 @@
           <el-form-item label="上传文件大小限制（M）">
             <el-input v-model="form.upload_max_size" />
           </el-form-item>
+          <el-form-item label="七牛云开关">
+            <el-switch v-model="form.upload_qiniu_status" active-color="#13ce66" inactive-color="#ff4949" />
+          </el-form-item>
+          <el-form-item label="七牛云公钥">
+            <el-input v-model="form.upload_qiniu_accessKey" />
+          </el-form-item>
+          <el-form-item label="七牛云私钥">
+            <el-input v-model="form.upload_qiniu_secretKey" />
+          </el-form-item>
+          <el-form-item label="七牛云bucket">
+            <el-input v-model="form.upload_qiniu_bucket" />
+          </el-form-item>
+          <el-form-item label="七牛云domain">
+            <el-input v-model="form.upload_qiniu_domain" />
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
             <el-button @click="onBack">返 回</el-button>

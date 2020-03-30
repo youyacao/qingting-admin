@@ -70,7 +70,6 @@ export default {
       this.form.username = res.data.username
       this.form.phone = res.data.phone
       this.form.email = res.data.email
-      this.form.avatar = res.data.avatar
       this.imgUrl = res.data.avatar
       if (res.data.vip_end_time !== '0000-00-00') {
         this.form.vip_end_time = res.data.vip_end_time
