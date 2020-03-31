@@ -136,6 +136,52 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/article',
+    component: Layout,
+    redirect: '/article/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'article',
+    meta: {
+      title: '图文管理',
+      icon: 'documentation',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'index',
+        // component: () => import('@/views/video/index'),
+        name: 'Index',
+        meta: {
+          title: '图文列表',
+          roles: ['admin', 'editor']
+        }
+      }
+    ]
+  },
+  {
+    path: '/advert',
+    component: Layout,
+    redirect: '/advert/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'advert',
+    meta: {
+      title: '广告管理',
+      icon: 'language',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'index',
+        // component: () => import('@/views/video/index'),
+        name: 'Index',
+        meta: {
+          title: '广告列表',
+          roles: ['admin', 'editor']
+        }
+      }
+    ]
+  },
+  {
     path: '/config',
     component: Layout,
     redirect: '/config/index',
