@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column align="center" label="VIP过期时间">
           <template slot-scope="scope">
-            {{ (scope.row.vip_end_time === '0000-00-00') ? '未开通':scope.row.vip_end_time }}
+            {{ scope.row.vip_end_time ? scope.row.vip_end_time:'未开通' }}
           </template>
         </el-table-column>
         <el-table-column align="center" label="邀请码" width="80">
