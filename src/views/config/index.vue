@@ -14,14 +14,14 @@
       </el-tab-pane>
       <el-tab-pane label="视频配置" name="video">
         <el-form ref="form" :model="form" label-width="200px">
-          <el-form-item label="观看视频是否要登录">
+          <el-form-item label="观看视频是否要登陆">
             <el-switch v-model="form.base_video_need_login" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
           <el-form-item label="免费试看次数">
-            <el-input v-model="form.base_video_free_time" placeholder="0代表不限制次数" />
+            <el-input v-model="form.base_video_free_time" placeholder="0代表不限制次数（需开启登陆）" />
           </el-form-item>
           <el-form-item label="免费试看时长">
-            <el-input v-model="form.base_video_free_duration" placeholder="0代表不限制时长" />
+            <el-input v-model="form.base_video_free_duration" placeholder="0代表不限制时长（需开启登陆）" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -31,14 +31,14 @@
       </el-tab-pane>
       <el-tab-pane label="直播配置" name="live">
         <el-form ref="form" :model="form" label-width="200px">
-          <el-form-item label="观看直播是否要登录">
+          <el-form-item label="观看直播是否要登陆">
             <el-switch v-model="form.base_live_need_login" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
           <el-form-item label="免费试看次数">
-            <el-input v-model="form.base_live_free_time" placeholder="0代表不限制次数" />
+            <el-input v-model="form.base_live_free_time" placeholder="0代表不限制次数（需开启登陆）" />
           </el-form-item>
           <el-form-item label="免费试看时长">
-            <el-input v-model="form.base_live_free_duration" placeholder="0代表不限制时长" />
+            <el-input v-model="form.base_live_free_duration" placeholder="0代表不限制时长（需开启登陆）" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -50,6 +50,9 @@
         <el-form ref="form" :model="form" label-width="200px">
           <el-form-item label="评论需要过滤的关键字">
             <el-input v-model="form.comment_forbid_keys" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="英文逗号分隔" />
+          </el-form-item>
+          <el-form-item label="评论是否开启审核">
+            <el-switch v-model="form.comment_open_check" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -158,6 +161,7 @@ export default {
         base_live_free_time: '',
         base_live_free_duration: '',
         comment_forbid_keys: '',
+        comment_open_check: false,
         email_smtp: '',
         email_smtp_port: '',
         email_account: '',
@@ -208,6 +212,11 @@ export default {
       this.form.base_live_free_time = res.data.base_live_free_time
       this.form.base_live_free_duration = res.data.base_live_free_duration
       this.form.comment_forbid_keys = res.data.comment_forbid_keys
+      if (res.data.comment_open_check === '1') {
+        this.form.comment_open_check = true
+      } else {
+        this.form.comment_open_check = false
+      }
       this.form.email_smtp = res.data.email_smtp
       this.form.email_smtp_port = res.data.email_smtp_port
       this.form.email_account = res.data.email_account
