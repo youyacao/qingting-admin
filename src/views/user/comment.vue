@@ -1,69 +1,59 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">用户列表</div>
+      <div slot="header">评论列表</div>
       <el-form :inline="true">
         <div class="filter-container">
           <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
             <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
+          <el-select v-model="listQuery.type" placeholder="全部" clearable style="width: 90px" class="filter-item">
+            <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
           <el-input v-model="listQuery.keyword" placeholder="用户名/手机号/邮箱" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
           </el-button>
-          <!--
-          <el-button class="filter-item" style="margin-left: 0px;" type="success" icon="el-icon-circle-plus" @click="handleCreate">
-            新增
-          </el-button>
-          -->
         </div>
       </el-form>
       <el-table ref="multipleTable" v-loading="loading" tooltip-effect="dark" :data="list" style="width: 100%;" stripe @selection-change="handleSelectionChange">
         <el-table-column align="left" type="selection" width="50" />
-        <el-table-column align="left" label="ID" width="80">
+        <el-table-column align="left" label="ID" width="60">
           <template slot-scope="scope">
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="用户名">
+        <el-table-column align="center" label="用户名/手机号/邮箱" width="200">
           <template slot-scope="scope">
-            {{ scope.row.username }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="手机号">
-          <template slot-scope="scope">
-            {{ scope.row.phone }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="邮箱">
-          <template slot-scope="scope">
+            {{ scope.row.username }}<br>
+            {{ scope.row.phone }}<br>
             {{ scope.row.email }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="VIP过期时间">
+        <el-table-column align="center" label="评论分类" width="100">
           <template slot-scope="scope">
-            {{ scope.row.vip_end_time ? scope.row.vip_end_time:'未开通' }}
+            {{ scope.row.type_str }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="邀请码" width="80">
+        <el-table-column align="center" label="评论对象ID" width="120">
           <template slot-scope="scope">
-            {{ scope.row.refcode }}
+            {{ scope.row.vid }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="最后登录时间">
+        <el-table-column align="center" label="评论内容">
           <template slot-scope="scope">
-            {{ (scope.row.last_login_time === '0000-00-00 00:00:00') ? '未登录':scope.row.last_login_time }}
+            {{ scope.row.content }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="注册时间">
+        <el-table-column align="center" label="创建时间" width="180">
           <template slot-scope="scope">
             {{ scope.row.created_at }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="状态" width="50">
+        <el-table-column align="center" label="状态" width="70">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.status == 1" type="success" size="mini">正常</el-tag>
-            <el-tag v-else type="danger" size="mini">禁用</el-tag>
+            <el-tag v-if="scope.row.status == 2" type="success" size="mini">审核通过</el-tag>
+            <el-tag v-else-if="scope.row.status == 1" type="warning" size="mini">待审核</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
@@ -73,11 +63,11 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="success" @click="handleBatchDisable(1)">
-        批量启用
+      <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="success" @click="handleBatchDisable(2)">
+        批量审核
       </el-button>
-      <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="warning" @click="handleBatchDisable(2)">
-        批量禁用
+      <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="warning" @click="handleBatchDisable(0)">
+        批量删除
       </el-button>
       <el-pagination
         prev-text="上一页"
@@ -93,20 +83,8 @@
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
       <el-form :model="data" label-width="140px">
-        <el-form-item label="用户名">
-          <el-input v-model="data.username" placeholder="用户名" />
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="data.password" placeholder="密码" />
-        </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="data.phone" placeholder="手机号" />
-        </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="data.email" placeholder="邮箱" />
-        </el-form-item>
-        <el-form-item label="VIP过期时间">
-          <el-date-picker v-model="data.vip_end_time" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" />
+        <el-form-item label="评论内容">
+          <el-input v-model="data.content" type="textarea" :autosize="{ minRows: 2, maxRows: 10}" placeholder="" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -119,15 +97,11 @@
 
 <script>
 import { deepClone } from '@/utils'
-import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/users'
+import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/comment'
 
 const defaultData = {
   id: '',
-  username: '',
-  password: '',
-  phone: '',
-  email: '',
-  vip_end_time: ''
+  content: ''
 }
 
 export default {
@@ -143,16 +117,35 @@ export default {
         },
         {
           value: '1',
-          label: '正常'
+          label: '待审核'
         }, {
           value: '2',
-          label: '禁用'
+          label: '审核通过'
+        }
+      ],
+      typeOptions: [
+        {
+          value: '',
+          label: '全部'
+        },
+        {
+          value: '1',
+          label: '短视频'
+        },
+        {
+          value: '2',
+          label: '图文'
+        },
+        {
+          value: '3',
+          label: '直播'
         }
       ],
       listQuery: {
         page: 1,
         limit: 10,
         keyword: '',
+        type: '',
         order: 'DESC'
       },
       batch: {
@@ -220,9 +213,6 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
-      if (this.data.vip_end_time === '0000-00-00') {
-        this.data.vip_end_time = ''
-      }
       this.$nextTick(() => {
         this.checkStrictly = false
       })

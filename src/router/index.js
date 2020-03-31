@@ -83,6 +83,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'comment',
+        component: () => import('@/views/user/comment'),
+        name: 'Comment',
+        meta: {
+          title: '评论列表',
+          roles: ['admin', 'editor']
+        }
+      },
+      {
         path: 'profile',
         component: () => import('@/views/user/profile'),
         hidden: true
@@ -91,6 +100,38 @@ export const asyncRoutes = [
         path: 'forget',
         component: () => import('@/views/user/forget'),
         hidden: true
+      }
+    ]
+  },
+  {
+    path: '/video',
+    component: Layout,
+    redirect: '/video/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'video',
+    meta: {
+      title: '视频管理',
+      icon: 'component',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'index',
+        // component: () => import('@/views/video/index'),
+        name: 'Index',
+        meta: {
+          title: '视频列表',
+          roles: ['admin', 'editor']
+        }
+      },
+      {
+        path: 'category',
+        // component: () => import('@/views/video/category'),
+        name: 'Category',
+        meta: {
+          title: '分类列表',
+          roles: ['admin', 'editor']
+        }
       }
     ]
   },
