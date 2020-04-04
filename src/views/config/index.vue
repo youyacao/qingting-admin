@@ -91,11 +91,8 @@
       </el-tab-pane>
       <el-tab-pane label="短信配置" name="sms">
         <el-form ref="form" :model="form" label-width="200px">
-          <el-form-item label="APPID">
-            <el-input v-model="form.sms_appid" />
-          </el-form-item>
-          <el-form-item label="APPKEY">
-            <el-input v-model="form.sms_appkey" />
+          <el-form-item label="云片网APIKEY">
+            <el-input v-model="form.sms_apikey" />
           </el-form-item>
           <el-form-item label="有效时间(秒)">
             <el-input v-model="form.sms_valid_time" />
@@ -171,8 +168,7 @@ export default {
         email_valid_time: 600,
         email_day_error_time: 5,
         email_code_template: '',
-        sms_appid: '',
-        sms_appkey: '',
+        sms_apikey: '',
         sms_valid_time: '',
         sms_day_error_num: '',
         sms_code_template: '',
@@ -226,8 +222,7 @@ export default {
       this.form.email_valid_time = res.data.email_valid_time
       this.form.email_day_error_time = res.data.email_day_error_time
       this.form.email_code_template = res.data.email_code_template
-      this.form.sms_appid = res.data.sms_appid
-      this.form.sms_appkey = res.data.sms_appkey
+      this.form.sms_apikey = res.data.sms_apikey
       this.form.sms_valid_time = res.data.sms_valid_time
       this.form.sms_day_error_num = res.data.sms_day_error_num
       this.form.sms_code_template = res.data.sms_code_template
