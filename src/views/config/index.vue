@@ -14,6 +14,9 @@
       </el-tab-pane>
       <el-tab-pane label="视频配置" name="video">
         <el-form ref="form" :model="form" label-width="200px">
+          <el-form-item label="视频是否开启审核">
+            <el-switch v-model="form.base_video_open_check" active-color="#13ce66" inactive-color="#ff4949" />
+          </el-form-item>
           <el-form-item label="观看视频是否要登陆">
             <el-switch v-model="form.base_video_need_login" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
@@ -46,13 +49,24 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <el-tab-pane label="图文配置" name="article">
+        <el-form ref="form" :model="form" label-width="200px">
+          <el-form-item label="图文是否开启审核">
+            <el-switch v-model="form.article_open_check" active-color="#13ce66" inactive-color="#ff4949" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
       <el-tab-pane label="评论配置" name="comment">
         <el-form ref="form" :model="form" label-width="200px">
-          <el-form-item label="评论需要过滤的关键字">
-            <el-input v-model="form.comment_forbid_keys" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="英文逗号分隔" />
-          </el-form-item>
           <el-form-item label="评论是否开启审核">
             <el-switch v-model="form.comment_open_check" active-color="#13ce66" inactive-color="#ff4949" />
+          </el-form-item>
+          <el-form-item label="评论需要过滤的关键字">
+            <el-input v-model="form.comment_forbid_keys" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="英文逗号分隔" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -154,9 +168,11 @@ export default {
         base_video_need_login: false,
         base_video_free_time: '',
         base_video_free_duration: '',
+        base_video_open_check: false,
         base_live_need_login: false,
         base_live_free_time: '',
         base_live_free_duration: '',
+        article_open_check: false,
         comment_forbid_keys: '',
         comment_open_check: false,
         email_smtp: '',
@@ -193,6 +209,11 @@ export default {
       } else {
         this.form.base_site_status = false
       }
+      if (res.data.base_video_open_check === '1') {
+        this.form.base_video_open_check = true
+      } else {
+        this.form.base_video_open_check = false
+      }
       if (res.data.base_video_need_login === '1') {
         this.form.base_video_need_login = true
       } else {
@@ -207,6 +228,11 @@ export default {
       }
       this.form.base_live_free_time = res.data.base_live_free_time
       this.form.base_live_free_duration = res.data.base_live_free_duration
+      if (res.data.article_open_check === '1') {
+        this.form.article_open_check = true
+      } else {
+        this.form.article_open_check = false
+      }
       this.form.comment_forbid_keys = res.data.comment_forbid_keys
       if (res.data.comment_open_check === '1') {
         this.form.comment_open_check = true
