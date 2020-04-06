@@ -104,23 +104,32 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/video',
+    path: '/conent',
     component: Layout,
-    redirect: '/video/index',
+    redirect: '/conent/video',
     alwaysShow: true, // will always show the root menu
-    name: 'video',
+    name: 'content',
     meta: {
-      title: '视频管理',
+      title: '内容管理',
       icon: 'component',
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
-        path: 'index',
+        path: 'video',
         // component: () => import('@/views/video/index'),
-        name: 'Index',
+        name: 'Video',
         meta: {
           title: '视频列表',
+          roles: ['admin', 'editor']
+        }
+      },
+      {
+        path: 'article',
+        // component: () => import('@/views/video/index'),
+        name: 'Article',
+        meta: {
+          title: '图文列表',
           roles: ['admin', 'editor']
         }
       },
@@ -130,29 +139,6 @@ export const asyncRoutes = [
         name: 'Category',
         meta: {
           title: '分类列表',
-          roles: ['admin', 'editor']
-        }
-      }
-    ]
-  },
-  {
-    path: '/article',
-    component: Layout,
-    redirect: '/article/index',
-    alwaysShow: true, // will always show the root menu
-    name: 'article',
-    meta: {
-      title: '图文管理',
-      icon: 'documentation',
-      roles: ['admin', 'editor'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'index',
-        // component: () => import('@/views/video/index'),
-        name: 'Index',
-        meta: {
-          title: '图文列表',
           roles: ['admin', 'editor']
         }
       }
