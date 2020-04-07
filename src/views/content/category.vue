@@ -1,82 +1,64 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">用户列表</div>
+      <div slot="header">分类列表</div>
       <el-form :inline="true">
         <div class="filter-container">
           <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
             <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
-          <el-input v-model="listQuery.keyword" placeholder="用户名/手机号/邮箱" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
           </el-button>
-          <!--
-          <el-button class="filter-item" style="margin-left: 0px;" type="success" icon="el-icon-circle-plus" @click="handleCreate">
+          <el-button class="filter-item" style="margin-left: 0px;" type="success" icon="el-icon-edit" @click="handleCreate">
             新增
           </el-button>
-          -->
         </div>
       </el-form>
-      <el-table ref="multipleTable" v-loading="loading" tooltip-effect="dark" :data="list" style="width: 100%;" stripe @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" v-loading="loading" tooltip-effect="dark" :data="list" style="width: 100%;" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" stripe @selection-change="handleSelectionChange">
         <el-table-column align="left" type="selection" width="50" />
-        <el-table-column align="left" label="ID" width="80">
+        <el-table-column align="left" label="ID" width="60">
           <template slot-scope="scope">
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="用户名">
+        <el-table-column align="center" label="分类名称" width="200">
           <template slot-scope="scope">
-            {{ scope.row.username }}
+            {{ scope.row.name }}<br>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="手机号">
+        <el-table-column align="center" label="图标">
           <template slot-scope="scope">
-            {{ scope.row.phone }}
+            <el-image style="width: 60px; height: 60px" :src="scope.row.icon"></el-image>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="邮箱">
+        <el-table-column align="center" label="排序" width="120">
           <template slot-scope="scope">
-            {{ scope.row.email }}
+            {{ scope.row.sort }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="VIP过期时间">
-          <template slot-scope="scope">
-            {{ scope.row.vip_end_time ? scope.row.vip_end_time:'未开通' }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="邀请码" width="80">
-          <template slot-scope="scope">
-            {{ scope.row.refcode }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="最后登录时间">
-          <template slot-scope="scope">
-            {{ (scope.row.last_login_time === '0000-00-00 00:00:00') ? '未登录':scope.row.last_login_time }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="注册时间">
+        <el-table-column align="center" label="创建时间" width="180">
           <template slot-scope="scope">
             {{ scope.row.created_at }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="状态" width="50">
+        <el-table-column align="center" label="状态" width="70">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.status == 1" type="success" size="mini">正常</el-tag>
-            <el-tag v-else type="danger" size="mini">禁用</el-tag>
+            <el-tag v-else-if="scope.row.status == 0" type="warning" size="mini">禁用</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleEdit(scope)">编辑</el-button>
-            <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleDelete(scope)">删除</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleDelete(scope)">禁用</el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="success" @click="handleBatchDisable(1)">
         批量启用
       </el-button>
-      <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="warning" @click="handleBatchDisable(2)">
+      <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="warning" @click="handleBatchDisable(0)">
         批量禁用
       </el-button>
       <el-pagination
@@ -93,20 +75,31 @@
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
       <el-form :model="data" label-width="140px">
-        <el-form-item label="用户名">
-          <el-input v-model="data.username" placeholder="用户名" />
+        <el-form-item label="父级分类">
+          <el-select v-model="data.pid" placeholder="请选择父级" clearable style="width: 90px" class="filter-item">
+            <el-option v-for="item in parentCategoryOptions" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="data.password" placeholder="密码" />
+        <el-form-item label="分类名称">
+          <el-input v-model="data.name" placeholder="分类名称" />
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="data.phone" placeholder="手机号" />
+        <el-form-item label="图标">
+          <el-upload
+            ref="upload"
+            class="avatar-uploader"
+            :action="upAction"
+            :headers="upHeaders"
+            :limit="1"
+            :show-file-list="false"
+            :on-success="handleSuccess"
+            :before-upload="beforeUpload"
+          >
+            <img v-if="imgUrl" :src="imgUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
         </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="data.email" placeholder="邮箱" />
-        </el-form-item>
-        <el-form-item label="VIP过期时间">
-          <el-date-picker v-model="data.vip_end_time" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" />
+        <el-form-item label="排序">
+          <el-input v-model="data.sort" placeholder="排序" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -119,15 +112,15 @@
 
 <script>
 import { deepClone } from '@/utils'
-import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/users'
+import { getDatas, addData, deleteData, updateData, batchDisable, getParentCategoryOptions } from '@/api/category'
+import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
-  username: '',
-  password: '',
-  phone: '',
-  email: '',
-  vip_end_time: ''
+  name: '',
+  icon: '',
+  pid: '',
+  sort: ''
 }
 
 export default {
@@ -142,25 +135,29 @@ export default {
           label: '全部'
         },
         {
+          value: '0',
+          label: '禁用'
+        }, {
           value: '1',
           label: '正常'
-        }, {
-          value: '2',
-          label: '禁用'
         }
       ],
+      parentCategoryOptions: [],
       listQuery: {
         page: 1,
         limit: 10,
-        keyword: '',
-        status: '',
-        order: 'DESC'
+        status: ''
       },
       batch: {
         selection: [],
         status: 1
       },
       data: Object.assign({}, defaultData),
+      imgUrl: '',
+      upAction: process.env.VUE_APP_BASE_API + '/upload',
+      upHeaders: {
+        Authorization: getToken()
+      },
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false
@@ -168,6 +165,7 @@ export default {
   },
   created() {
     this.getList()
+    this.handleParentCategoryOptions()
   },
   methods: {
     async getList() {
@@ -189,6 +187,12 @@ export default {
       this.batch.status = status
       await batchDisable(this.batch)
       this.getList()
+    },
+    async handleParentCategoryOptions() {
+      const res = await getParentCategoryOptions()
+      if (res.code === 200) {
+        this.parentCategoryOptions = res.data
+      }
     },
     handleSelectionChange(obj) {
       this.batch.selection = []
@@ -212,6 +216,7 @@ export default {
       this.getList()
     },
     handleCreate() {
+      this.imgUrl = ''
       this.data = Object.assign({}, defaultData)
       this.dialogType = 'new'
       this.dialogVisible = true
@@ -221,25 +226,26 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
-      if (this.data.vip_end_time === '0000-00-00') {
-        this.data.vip_end_time = ''
+      this.imgUrl = this.data.icon
+      if (this.data.pid === 0) {
+        this.data.pid = ''
       }
       this.$nextTick(() => {
         this.checkStrictly = false
       })
     },
     handleDelete({ $index, row }) {
-      this.$confirm('确定删除该条数据?', '警告', {
+      this.$confirm('确定禁用该条数据?', '警告', {
         confirmButtonText: '确 定',
         cancelButtonText: '取 消',
         type: 'warning'
       })
         .then(async() => {
           await deleteData(row.id)
-          this.list.splice($index, 1)
+          this.getList()
           this.$message({
             type: 'success',
-            message: '删除成功'
+            message: '禁用成功'
           })
         })
         .catch(err => { console.error(err) })
@@ -248,21 +254,33 @@ export default {
       const isEdit = this.dialogType === 'edit'
       if (isEdit) {
         await updateData(this.data.id, this.data)
-        for (let index = 0; index < this.list.length; index++) {
-          if (this.list[index].id === this.data.id) {
-            this.list.splice(index, 1, Object.assign({}, this.data))
-            break
-          }
-        }
       } else {
         await addData(this.data)
-        this.getList()
       }
+      this.getList()
       this.dialogVisible = false
       this.$message({
         type: 'success',
         message: '保存成功'
       })
+    },
+    handleSuccess(res, file) {
+      if (res.code === 200) {
+        this.data.icon = res.data.img_url
+        this.imgUrl = URL.createObjectURL(file.raw)
+        this.$refs['upload'].clearFiles()
+        this.loading = false
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+        this.loading = false
+      }
+    },
+    beforeUpload(file) {
+      this.loading = true
+      return true
     }
   }
 }
@@ -273,5 +291,28 @@ export default {
   .permission-tree {
     margin-bottom: 30px;
   }
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
 }
 </style>

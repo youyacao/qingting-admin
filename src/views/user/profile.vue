@@ -108,7 +108,6 @@ export default {
       this.loading = true
       return true
     }
-
   }
 }
 </script>

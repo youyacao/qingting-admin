@@ -104,9 +104,9 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/conent',
+    path: '/content',
     component: Layout,
-    redirect: '/conent/video',
+    redirect: '/content/video',
     alwaysShow: true, // will always show the root menu
     name: 'content',
     meta: {
@@ -117,7 +117,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'video',
-        // component: () => import('@/views/video/index'),
+        component: () => import('@/views/content/video'),
         name: 'Video',
         meta: {
           title: '视频列表',
@@ -126,7 +126,7 @@ export const asyncRoutes = [
       },
       {
         path: 'article',
-        // component: () => import('@/views/video/index'),
+        component: () => import('@/views/content/article'),
         name: 'Article',
         meta: {
           title: '图文列表',
@@ -135,7 +135,7 @@ export const asyncRoutes = [
       },
       {
         path: 'category',
-        // component: () => import('@/views/video/category'),
+        component: () => import('@/views/content/category'),
         name: 'Category',
         meta: {
           title: '分类列表',
