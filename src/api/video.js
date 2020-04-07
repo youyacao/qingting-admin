@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function getData(id) {
   return request({
-    url: `category/${id}`,
+    url: `video/${id}`,
     method: 'get'
   })
 }
 
 export function getDatas(data) {
   return request({
-    url: 'category',
+    url: 'video',
     method: 'get',
     params: data
   })
@@ -17,7 +17,7 @@ export function getDatas(data) {
 
 export function addData(data) {
   return request({
-    url: 'category',
+    url: 'video',
     method: 'post',
     data
   })
@@ -25,7 +25,7 @@ export function addData(data) {
 
 export function updateData(id, data) {
   return request({
-    url: `category/${id}`,
+    url: `video/${id}`,
     method: 'put',
     data
   })
@@ -33,14 +33,14 @@ export function updateData(id, data) {
 
 export function deleteData(id) {
   return request({
-    url: `category/${id}`,
+    url: `video/${id}`,
     method: 'delete'
   })
 }
 
 export function batchDisable(data) {
   return request({
-    url: `category/batchDisable`,
+    url: `video/batchDisable`,
     method: 'post',
     data
   })
@@ -48,14 +48,7 @@ export function batchDisable(data) {
 
 export function getParentCategoryOptions() {
   return request({
-    url: `category/getParentCategoryOptions`,
-    method: 'post'
-  })
-}
-
-export function getCategoryOptions() {
-  return request({
-    url: `category/getCategoryOptions`,
+    url: `video/getTypeOptions`,
     method: 'post'
   })
 }

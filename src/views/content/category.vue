@@ -73,10 +73,10 @@
         @size-change="handleSizeChange"
       />
     </el-card>
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑分类':'新增分类'">
       <el-form :model="data" label-width="140px">
         <el-form-item label="父级分类">
-          <el-select v-model="data.pid" placeholder="请选择父级" clearable style="width: 90px" class="filter-item">
+          <el-select v-model="data.pid" placeholder="请选择父级" clearable class="filter-item">
             <el-option v-for="item in parentCategoryOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>

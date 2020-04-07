@@ -1,51 +1,58 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">评论列表</div>
+      <div slot="header">视频列表</div>
       <el-form :inline="true">
         <div class="filter-container">
+          <el-cascader v-model="listQuery.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类"></el-cascader>
+          <el-input v-model="listQuery.username" placeholder="用户ID/手机号/邮箱" style="width: 240px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          <el-input v-model="listQuery.keyword" placeholder="关键字" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
             <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
-          <el-select v-model="listQuery.type" placeholder="全部" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-          <el-input v-model="listQuery.keyword" placeholder="用户名/手机号/邮箱" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
+          </el-button>
+          <el-button class="filter-item" style="margin-left: 0px;" type="success" icon="el-icon-edit" @click="handleCreate">
+            新增
           </el-button>
         </div>
       </el-form>
       <el-table ref="multipleTable" v-loading="loading" tooltip-effect="dark" :data="list" style="width: 100%;" stripe @selection-change="handleSelectionChange">
         <el-table-column align="left" type="selection" width="50" />
-        <el-table-column align="left" label="ID" width="60">
+        <el-table-column align="left" label="ID" width="80">
           <template slot-scope="scope">
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="用户名/手机号/邮箱" width="200">
+        <el-table-column align="center" label="发布用户" width="120">
           <template slot-scope="scope">
             {{ scope.row.username }}<br>
             {{ scope.row.phone }}<br>
             {{ scope.row.email }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="评论分类" width="100">
+        <el-table-column align="center" label="分类" width="100">
           <template slot-scope="scope">
-            {{ scope.row.type_str }}
+            {{ scope.row.category_name }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="评论对象ID" width="120">
+        <el-table-column align="center" label="标题" width="120">
           <template slot-scope="scope">
-            {{ scope.row.vid }}
+            {{ scope.row.title }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="评论内容">
+        <el-table-column align="center" label="预览图" width="80">
           <template slot-scope="scope">
-            {{ scope.row.content }}
+            <el-image style="width: 60px; height: 60px" :src="scope.row.thumb"></el-image>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="创建时间" width="180">
+        <el-table-column align="center" label="视频链接">
+          <template slot-scope="scope">
+            <el-link :href="scope.row.video_url" target="_blank" type="primary">查看视频</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="发布时间" width="100">
           <template slot-scope="scope">
             {{ scope.row.created_at }}
           </template>
@@ -83,8 +90,39 @@
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
       <el-form :model="data" label-width="140px">
-        <el-form-item label="评论内容">
-          <el-input v-model="data.content" type="textarea" :autosize="{ minRows: 2, maxRows: 10}" placeholder="" />
+        <el-form-item label="分类">
+          <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类"></el-cascader>
+        </el-form-item>
+        <el-form-item label="标题">
+          <el-input v-model="data.title" placeholder="标题" />
+        </el-form-item>
+        <el-form-item label="预览图">
+          <el-upload
+            ref="upload"
+            class="avatar-uploader"
+            :action="upAction"
+            :headers="upHeaders"
+            :limit="1"
+            :show-file-list="false"
+            :on-success="handleSuccess"
+            :before-upload="beforeUpload"
+          >
+            <img v-if="imgUrl" :src="imgUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="视频">
+          <el-upload
+            ref="upload"
+            class="upload-demo"
+            :action="upAction"
+            :headers="upHeaders"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :file-list="fileList">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过10M</div>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -97,11 +135,16 @@
 
 <script>
 import { deepClone } from '@/utils'
-import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/comment'
+import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/video'
+import { getCategoryOptions } from '../../api/category'
+import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
-  content: ''
+  category_id: '',
+  title: '',
+  thumb: '',
+  video_url: ''
 }
 
 export default {
@@ -123,34 +166,24 @@ export default {
           label: '审核通过'
         }
       ],
-      typeOptions: [
-        {
-          value: '',
-          label: '全部'
-        },
-        {
-          value: '1',
-          label: '短视频'
-        },
-        {
-          value: '2',
-          label: '图文'
-        },
-        {
-          value: '3',
-          label: '直播'
-        }
-      ],
+      categoryOptions: [],
       listQuery: {
         page: 1,
         limit: 10,
         keyword: '',
-        type: '',
-        order: 'DESC'
+        username: '',
+        category_id: '',
+        status: ''
       },
       batch: {
         selection: [],
         status: 1
+      },
+      imgUrl: '',
+      fileList: [],
+      upAction: process.env.VUE_APP_BASE_API + '/upload',
+      upHeaders: {
+        Authorization: getToken()
       },
       data: Object.assign({}, defaultData),
       dialogVisible: false,
@@ -160,6 +193,7 @@ export default {
   },
   created() {
     this.getList()
+    this.handleCategoryOptions()
   },
   methods: {
     async getList() {
@@ -181,6 +215,12 @@ export default {
       this.batch.status = status
       await batchDisable(this.batch)
       this.getList()
+    },
+    async handleCategoryOptions() {
+      const res = await getCategoryOptions()
+      if (res.code === 200) {
+        this.categoryOptions = res.data
+      }
     },
     handleSelectionChange(obj) {
       this.batch.selection = []
@@ -213,6 +253,7 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
+      this.imgUrl = this.data.thumb
       this.$nextTick(() => {
         this.checkStrictly = false
       })
@@ -237,21 +278,36 @@ export default {
       const isEdit = this.dialogType === 'edit'
       if (isEdit) {
         await updateData(this.data.id, this.data)
-        for (let index = 0; index < this.list.length; index++) {
-          if (this.list[index].id === this.data.id) {
-            this.list.splice(index, 1, Object.assign({}, this.data))
-            break
-          }
-        }
       } else {
         await addData(this.data)
-        this.getList()
       }
+      this.getList()
       this.dialogVisible = false
       this.$message({
         type: 'success',
         message: '保存成功'
       })
+    },
+    handleSuccess(res, file) {
+      if (res.code === 200) {
+        this.data.thumb = res.data.img_url
+        this.imgUrl = URL.createObjectURL(file.raw)
+        this.$refs['upload'].clearFiles()
+        this.loading = false
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+        this.loading = false
+      }
+    },
+    beforeUpload(file) {
+      this.loading = true
+      return true
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${ file.name }？`)
     }
   }
 }
@@ -262,5 +318,28 @@ export default {
   .permission-tree {
     margin-bottom: 30px;
   }
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
 }
 </style>
