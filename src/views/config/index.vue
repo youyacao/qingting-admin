@@ -198,7 +198,7 @@ export default {
       },
       form: {
         base_site_status: false,
-        base_default_avatar: false,
+        base_default_avatar: '',
         base_gold_unit: '',
         base_gold_min_award: '',
         base_gold_max_award: '',
@@ -252,6 +252,7 @@ export default {
       } else {
         this.form.base_site_status = false
       }
+      this.form.base_default_avatar = res.data.base_default_avatar
       this.form.base_gold_unit = res.data.base_gold_unit
       this.form.base_gold_min_award = res.data.base_gold_min_award
       this.form.base_gold_max_award = res.data.base_gold_max_award
