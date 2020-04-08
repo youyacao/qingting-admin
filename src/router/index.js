@@ -92,6 +92,33 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'refer',
+        component: () => import('@/views/user/refer'),
+        name: 'Refer',
+        meta: {
+          title: '推广列表',
+          roles: ['admin', 'editor']
+        }
+      },
+      {
+        path: 'accountLog',
+        component: () => import('@/views/user/accountLog'),
+        name: 'AccountLog',
+        meta: {
+          title: '账变记录',
+          roles: ['admin', 'editor']
+        }
+      },
+      {
+        path: 'withdrawLog',
+        component: () => import('@/views/user/withdrawLog'),
+        name: 'WithdrawLog',
+        meta: {
+          title: '提现记录',
+          roles: ['admin', 'editor']
+        }
+      },
+      {
         path: 'profile',
         component: () => import('@/views/user/profile'),
         hidden: true

@@ -53,3 +53,19 @@ export function batchDisable(data) {
     data
   })
 }
+
+export function refer(data) {
+  return request({
+    url: `users/refer`,
+    method: 'post',
+    data
+  })
+}
+
+export function accountLog(data) {
+  return request({
+    url: `users/accountLog`,
+    method: 'post',
+    data
+  })
+}
