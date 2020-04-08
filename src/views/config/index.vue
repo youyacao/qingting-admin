@@ -6,19 +6,50 @@
           <el-form-item label="站点状态">
             <el-switch v-model="form.base_site_status" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
+          <el-form-item label="默认头像">
+            <el-upload
+              ref="upload"
+              class="avatar-uploader"
+              :action="upAction"
+              :headers="upHeaders"
+              :limit="1"
+              :show-file-list="false"
+              :on-success="handleSuccess"
+              :before-upload="beforeUpload"
+            >
+              <img v-if="avatar_url" :src="avatar_url" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon" />
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="金币换算单位">
+            <el-input v-model="form.base_gold_unit" placeholder="1元人民币等于多少金币数" />
+          </el-form-item>
+          <el-form-item label="推荐奖励金币最小值">
+            <el-input v-model="form.base_gold_min_award" />
+          </el-form-item>
+          <el-form-item label="推荐奖励金币最大值">
+            <el-input v-model="form.base_gold_max_award" />
+          </el-form-item>
+          <el-form-item label="最低提现金币数">
+            <el-input v-model="form.base_low_withdraw_gold" />
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
             <el-button @click="onBack">返 回</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="视频配置" name="video">
+      <el-tab-pane label="内容配置" name="content">
         <el-form ref="form" :model="form" label-width="200px">
+          <el-divider content-position="center">视频配置</el-divider>
           <el-form-item label="视频是否开启审核">
             <el-switch v-model="form.base_video_open_check" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
           <el-form-item label="观看视频是否要登陆">
             <el-switch v-model="form.base_video_need_login" active-color="#13ce66" inactive-color="#ff4949" />
+          </el-form-item>
+          <el-form-item label="观看几个视频出现广告">
+            <el-input v-model="form.base_video_show_ad" placeholder="0代表不出现广告" />
           </el-form-item>
           <el-form-item label="免费试看次数">
             <el-input v-model="form.base_video_free_time" placeholder="0代表不限制次数（需开启登陆）" />
@@ -26,14 +57,7 @@
           <el-form-item label="免费试看时长">
             <el-input v-model="form.base_video_free_duration" placeholder="0代表不限制时长（需开启登陆）" />
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">保 存</el-button>
-            <el-button @click="onBack">返 回</el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="直播配置" name="live">
-        <el-form ref="form" :model="form" label-width="200px">
+          <el-divider content-position="center">直播配置</el-divider>
           <el-form-item label="观看直播是否要登陆">
             <el-switch v-model="form.base_live_need_login" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
@@ -43,25 +67,11 @@
           <el-form-item label="免费试看时长">
             <el-input v-model="form.base_live_free_duration" placeholder="0代表不限制时长（需开启登陆）" />
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">保 存</el-button>
-            <el-button @click="onBack">返 回</el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="图文配置" name="article">
-        <el-form ref="form" :model="form" label-width="200px">
+          <el-divider content-position="center">图文配置</el-divider>
           <el-form-item label="图文是否开启审核">
             <el-switch v-model="form.article_open_check" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">保 存</el-button>
-            <el-button @click="onBack">返 回</el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="评论配置" name="comment">
-        <el-form ref="form" :model="form" label-width="200px">
+          <el-divider content-position="center">评论配置</el-divider>
           <el-form-item label="评论是否开启审核">
             <el-switch v-model="form.comment_open_check" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
@@ -152,20 +162,49 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <el-tab-pane label="支付配置" name="pay">
+        <el-form ref="form" :model="form" label-width="200px">
+          <el-form-item label="商户accesskey">
+            <el-input v-model="form.pay_accesskey" />
+          </el-form-item>
+          <el-form-item label="商户秘钥">
+            <el-input v-model="form.pay_secretkey" />
+          </el-form-item>
+          <el-form-item label="callback地址">
+            <el-input v-model="form.pay_callback_url" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
 import { saveData, getData } from '../../api/config'
+import { getToken } from '../../utils/auth'
 export default {
   data() {
     return {
       activeTab: 'base',
       loading: false,
+      avatar_url: '',
+      upAction: process.env.VUE_APP_BASE_API + '/upload',
+      upHeaders: {
+        Authorization: getToken()
+      },
       form: {
         base_site_status: false,
+        base_default_avatar: false,
+        base_gold_unit: '',
+        base_gold_min_award: '',
+        base_gold_max_award: '',
+        base_low_withdraw_gold: '',
         base_video_need_login: false,
+        base_video_show_ad: '',
         base_video_free_time: '',
         base_video_free_duration: '',
         base_video_open_check: false,
@@ -194,7 +233,10 @@ export default {
         upload_qiniu_accessKey: '',
         upload_qiniu_secretKey: '',
         upload_qiniu_bucket: '',
-        upload_qiniu_domain: ''
+        upload_qiniu_domain: '',
+        pay_accesskey: '',
+        pay_secretkey: '',
+        pay_callback_url: ''
       }
     }
   },
@@ -204,11 +246,16 @@ export default {
   methods: {
     async getConfig() {
       const res = await getData()
+      this.avatar_url = res.data.base_default_avatar
       if (res.data.base_site_status === '1') {
         this.form.base_site_status = true
       } else {
         this.form.base_site_status = false
       }
+      this.form.base_gold_unit = res.data.base_gold_unit
+      this.form.base_gold_min_award = res.data.base_gold_min_award
+      this.form.base_gold_max_award = res.data.base_gold_max_award
+      this.form.base_low_withdraw_gold = res.data.base_low_withdraw_gold
       if (res.data.base_video_open_check === '1') {
         this.form.base_video_open_check = true
       } else {
@@ -219,6 +266,7 @@ export default {
       } else {
         this.form.base_video_need_login = false
       }
+      this.form.base_video_show_ad = res.data.base_video_show_ad
       this.form.base_video_free_time = res.data.base_video_free_time
       this.form.base_video_free_duration = res.data.base_video_free_duration
       if (res.data.base_live_need_login === '1') {
@@ -263,6 +311,9 @@ export default {
       this.form.upload_qiniu_secretKey = res.data.upload_qiniu_secretKey
       this.form.upload_qiniu_bucket = res.data.upload_qiniu_bucket
       this.form.upload_qiniu_domain = res.data.upload_qiniu_domain
+      this.form.pay_accesskey = res.data.pay_accesskey
+      this.form.pay_secretkey = res.data.pay_secretkey
+      this.form.pay_callback_url = res.data.pay_callback_url
     },
     async onSubmit() {
       if (this.loading) {
@@ -278,7 +329,51 @@ export default {
     },
     onBack() {
       this.$router.go(-1)
+    },
+    handleSuccess(res, file) {
+      if (res.code === 200) {
+        this.form.base_default_avatar = res.data.img_url
+        this.avatar_url = URL.createObjectURL(file.raw)
+        this.$refs['upload'].clearFiles()
+        this.loading = false
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+        this.loading = false
+      }
+    },
+    beforeUpload(file) {
+      this.loading = true
+      return true
     }
   }
 }
 </script>
+
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+</style>
