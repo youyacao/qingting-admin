@@ -164,7 +164,7 @@
       </el-tab-pane>
       <el-tab-pane label="支付配置" name="pay">
         <el-form ref="form" :model="form" label-width="200px">
-          <el-form-item label="商户accesskey">
+          <el-form-item label="商户ID">
             <el-input v-model="form.pay_accesskey" />
           </el-form-item>
           <el-form-item label="商户秘钥">
