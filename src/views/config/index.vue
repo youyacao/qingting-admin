@@ -246,7 +246,7 @@ export default {
   methods: {
     async getConfig() {
       const res = await getData()
-      this.avatar_url = res.data.base_default_avatar
+      this.avatar_url = res.data.base_default_avatar_url
       if (res.data.base_site_status === '1') {
         this.form.base_site_status = true
       } else {
