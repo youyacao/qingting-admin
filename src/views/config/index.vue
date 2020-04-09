@@ -135,11 +135,17 @@
       </el-tab-pane>
       <el-tab-pane label="上传配置" name="upload">
         <el-form ref="form" :model="form" label-width="200px">
-          <el-form-item label="上传文件类型">
+          <el-form-item label="上传图片类型">
             <el-input v-model="form.upload_file_ext" placeholder="用|分隔类型（如：png|jpg|gif）" />
           </el-form-item>
           <el-form-item label="上传文件大小限制（M）">
             <el-input v-model="form.upload_max_size" />
+          </el-form-item>
+          <el-form-item label="上传视频类型">
+            <el-input v-model="form.upload_video_file_ext" placeholder="用|分隔类型（如：mp4）" />
+          </el-form-item>
+          <el-form-item label="上传视频大小限制（M）">
+            <el-input v-model="form.upload_video_max_size" />
           </el-form-item>
           <el-form-item label="七牛云开关">
             <el-switch v-model="form.upload_qiniu_status" active-color="#13ce66" inactive-color="#ff4949" />
@@ -229,6 +235,8 @@ export default {
         sms_code_template: '',
         upload_file_ext: '',
         upload_max_size: '',
+        upload_video_file_ext: '',
+        upload_video_max_size: '',
         upload_qiniu_status: false,
         upload_qiniu_accessKey: '',
         upload_qiniu_secretKey: '',
@@ -303,6 +311,8 @@ export default {
       this.form.sms_code_template = res.data.sms_code_template
       this.form.upload_file_ext = res.data.upload_file_ext
       this.form.upload_max_size = res.data.upload_max_size
+      this.form.upload_video_file_ext = res.data.upload_video_file_ext
+      this.form.upload_video_max_size = res.data.upload_video_max_size
       if (res.data.upload_qiniu_status === '1') {
         this.form.upload_qiniu_status = true
       } else {
