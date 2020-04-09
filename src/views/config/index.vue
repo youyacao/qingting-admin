@@ -52,7 +52,7 @@
             <el-input v-model="form.base_video_show_ad" placeholder="0代表不出现广告" />
           </el-form-item>
           <el-form-item label="免费试看次数">
-            <el-input v-model="form.base_video_free_time" placeholder="0代表不限制次数（需开启登陆）" />
+            <el-input v-model="form.base_video_free_num" placeholder="0代表不限制个数（需开启登陆）" />
           </el-form-item>
           <el-form-item label="免费试看时长">
             <el-input v-model="form.base_video_free_duration" placeholder="0代表不限制时长（需开启登陆）" />
@@ -62,7 +62,7 @@
             <el-switch v-model="form.base_live_need_login" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
           <el-form-item label="免费试看次数">
-            <el-input v-model="form.base_live_free_time" placeholder="0代表不限制次数（需开启登陆）" />
+            <el-input v-model="form.base_live_free_num" placeholder="0代表不限制个数（需开启登陆）" />
           </el-form-item>
           <el-form-item label="免费试看时长">
             <el-input v-model="form.base_live_free_duration" placeholder="0代表不限制时长（需开启登陆）" />
