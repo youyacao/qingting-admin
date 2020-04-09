@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">账变记录</div>
+      <div slot="header">管理员日志</div>
       <el-form :inline="true">
         <div class="filter-container">
-          <el-input v-model="listQuery.keyword" placeholder="用户ID（用户名/手机号/邮箱）" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          <el-input v-model="listQuery.keyword" placeholder="操作用户ID（用户名/手机号/邮箱）" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
           </el-button>
@@ -17,42 +17,38 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="账号(用户名/手机号/邮箱)">
+        <el-table-column align="center" label="操作账号">
           <template slot-scope="scope">
             {{ scope.row.username }}/
-            {{ scope.row.phone }}/
-            {{ scope.row.email }}
+            {{ scope.row.phone }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="类型">
+        <el-table-column align="center" label="code">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.type == 1" type="success" size="mini">余额</el-tag>
-            <el-tag v-else-if="scope.row.type == 2" type="info" size="mini">积分</el-tag>
-            <el-tag v-else type="warning" size="mini">金币</el-tag>
+            {{ scope.row.code }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="余额">
+        <el-table-column align="center" label="msg">
           <template slot-scope="scope">
-            {{ scope.row.amount }}
+            {{ scope.row.msg }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="积分">
+        <el-table-column align="center" label="requests">
           <template slot-scope="scope">
-            {{ scope.row.integral }}
+            {{ scope.row.requests }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="金币">
+        <el-table-column align="center" label="action">
           <template slot-scope="scope">
-            {{ scope.row.gold }}
+            {{ scope.row.action }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="状态" width="50">
+        <el-table-column align="center" label="IP">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.status == 1" type="success" size="mini">增加</el-tag>
-            <el-tag v-else type="danger" size="mini">扣除</el-tag>
+            {{ scope.row.ip }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="提交时间">
+        <el-table-column align="center" label="时间">
           <template slot-scope="scope">
             {{ scope.row.created_at }}
           </template>
@@ -74,7 +70,7 @@
 </template>
 
 <script>
-import { accountLog } from '@/api/users'
+import { adminLog } from '@/api/users'
 
 export default {
   data() {
@@ -95,7 +91,7 @@ export default {
   methods: {
     async getList() {
       this.loading = true
-      const res = await accountLog(this.listQuery)
+      const res = await adminLog(this.listQuery)
       this.list = res.data.data
       this.total = res.data.total
       this.listQuery.page = res.data.current_page

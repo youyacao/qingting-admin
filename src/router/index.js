@@ -239,6 +239,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'adminLog',
+        component: () => import('@/views/user/adminLog'),
+        name: 'AdminLog',
+        meta: {
+          title: '管理员日志',
+          roles: ['admin']
+        }
+      },
+      {
         path: 'role',
         component: () => import('@/views/permission/role'),
         name: 'Role',

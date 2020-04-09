@@ -69,3 +69,19 @@ export function accountLog(data) {
     data
   })
 }
+
+export function withdrawLog(data) {
+  return request({
+    url: `users/withdrawLog`,
+    method: 'post',
+    data
+  })
+}
+
+export function adminLog(data) {
+  return request({
+    url: `users/adminLog`,
+    method: 'post',
+    data
+  })
+}

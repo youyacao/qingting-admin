@@ -19,9 +19,9 @@
         </el-table-column>
         <el-table-column align="center" label="账号(用户名/手机号/邮箱)">
           <template slot-scope="scope">
-            {{ scope.row.refer_username }}/
-            {{ scope.row.refer_phone }}/
-            {{ scope.row.refer_email }}
+            {{ scope.row.username }}/
+            {{ scope.row.phone }}/
+            {{ scope.row.email }}
           </template>
         </el-table-column>
         <el-table-column align="center" label="类型">
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { accountLog } from '@/api/users'
+import { withdrawLog } from '@/api/users'
 
 export default {
   data() {
@@ -95,7 +95,7 @@ export default {
   methods: {
     async getList() {
       this.loading = true
-      const res = await accountLog(this.listQuery)
+      const res = await withdrawLog(this.listQuery)
       this.list = res.data.data
       this.total = res.data.total
       this.listQuery.page = res.data.current_page
