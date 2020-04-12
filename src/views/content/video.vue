@@ -192,7 +192,7 @@ export default {
       },
       imgUrl: '',
       fileList: [],
-      upAction: process.env.VUE_APP_BASE_API + '/uploadVideo',
+      upAction: process.env.VUE_APP_BASE_API + '/upload',
       upVideoAction: process.env.VUE_APP_BASE_API + '/uploadVideo',
       upHeaders: {
         Authorization: getToken()
