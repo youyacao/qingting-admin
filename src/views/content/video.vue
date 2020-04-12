@@ -89,7 +89,7 @@
       />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
-      <el-form :model="data" label-width="140px">
+      <el-form v-loading="loadingForm" :model="data" label-width="140px">
         <el-form-item label="分类">
           <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
         </el-form-item>
@@ -111,20 +111,28 @@
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
+        <el-form-item label="预览图地址">
+          <el-input v-model="data.thumb_url" placeholder="预览图地址优先" />
+        </el-form-item>
         <el-form-item label="视频">
           <el-upload
             ref="uploadVideo"
             class="upload-demo"
-            :action="upAction"
+            :action="upVideoAction"
             :headers="upHeaders"
-            :before-remove="beforeRemove"
-            multiple
-            :limit="3"
+            :on-remove="handleVideoRemove"
             :file-list="fileList"
+            list-type="picture"
+            :limit="1"
+            :on-success="handleVideoSuccess"
+            :before-upload="beforeVideoUpload"
           >
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过10M</div>
+            <div slot="tip" class="el-upload__tip">只能上传MP4文件，且不超过10M</div>
           </el-upload>
+        </el-form-item>
+        <el-form-item label="视频地址">
+          <el-input v-model="data.video_url2" placeholder="视频地址优先" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -153,6 +161,7 @@ export default {
   data() {
     return {
       loading: false,
+      loadingForm: false,
       list: [],
       total: 0,
       statusOptions: [
@@ -183,7 +192,8 @@ export default {
       },
       imgUrl: '',
       fileList: [],
-      upAction: process.env.VUE_APP_BASE_API + '/upload',
+      upAction: process.env.VUE_APP_BASE_API + '/uploadVideo',
+      upVideoAction: process.env.VUE_APP_BASE_API + '/uploadVideo',
       upHeaders: {
         Authorization: getToken()
       },
@@ -301,9 +311,29 @@ export default {
         })
       }
       this.$refs['upload'].clearFiles()
+      this.loadingForm = false
     },
     beforeUpload(file) {
+      this.loadingForm = true
       return true
+    },
+    beforeVideoUpload(file) {
+      return true
+    },
+    handleVideoRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handleVideoSuccess(res, file) {
+      if (res.code === 200) {
+        this.data.thumb = res.data.img_url
+        this.imgUrl = URL.createObjectURL(file.raw)
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+      }
+      this.$refs['uploadVideo'].clearFiles()
     }
   }
 }

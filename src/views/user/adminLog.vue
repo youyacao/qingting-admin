@@ -19,7 +19,7 @@
         </el-table-column>
         <el-table-column align="center" label="操作账号">
           <template slot-scope="scope">
-            {{ scope.row.username }}/
+            {{ scope.row.username }}<br>
             {{ scope.row.phone }}
           </template>
         </el-table-column>

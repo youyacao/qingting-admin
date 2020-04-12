@@ -47,6 +47,7 @@ export default {
   data() {
     return {
       loading: false,
+      loadingAvatar: false,
       form: {
         username: '',
         phone: '',
@@ -101,8 +102,10 @@ export default {
         })
       }
       this.$refs['upload'].clearFiles()
+      this.loading = false
     },
     beforeUpload(file) {
+      this.loading = true
       return true
     }
   }
