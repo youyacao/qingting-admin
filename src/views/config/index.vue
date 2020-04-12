@@ -8,7 +8,7 @@
           </el-form-item>
           <el-form-item label="默认头像">
             <el-upload
-              ref="upload"
+              ref="uploadAvatar"
               class="avatar-uploader"
               :action="upAction"
               :headers="upHeaders"
@@ -192,6 +192,7 @@
 <script>
 import { saveData, getData } from '../../api/config'
 import { getToken } from '../../utils/auth'
+import { deepClone } from '../../utils'
 export default {
   data() {
     return {
@@ -254,77 +255,8 @@ export default {
   methods: {
     async getConfig() {
       const res = await getData()
+      this.form = deepClone(res.data)
       this.avatar_url = res.data.base_default_avatar_url
-      if (res.data.base_site_status === '1') {
-        this.form.base_site_status = true
-      } else {
-        this.form.base_site_status = false
-      }
-      this.form.base_default_avatar = res.data.base_default_avatar
-      this.form.base_gold_unit = res.data.base_gold_unit
-      this.form.base_gold_min_award = res.data.base_gold_min_award
-      this.form.base_gold_max_award = res.data.base_gold_max_award
-      this.form.base_low_withdraw_gold = res.data.base_low_withdraw_gold
-      if (res.data.base_video_open_check === '1') {
-        this.form.base_video_open_check = true
-      } else {
-        this.form.base_video_open_check = false
-      }
-      if (res.data.base_video_need_login === '1') {
-        this.form.base_video_need_login = true
-      } else {
-        this.form.base_video_need_login = false
-      }
-      this.form.base_video_show_ad = res.data.base_video_show_ad
-      this.form.base_video_free_time = res.data.base_video_free_time
-      this.form.base_video_free_duration = res.data.base_video_free_duration
-      if (res.data.base_live_need_login === '1') {
-        this.form.base_live_need_login = true
-      } else {
-        this.form.base_live_need_login = false
-      }
-      this.form.base_live_free_time = res.data.base_live_free_time
-      this.form.base_live_free_duration = res.data.base_live_free_duration
-      if (res.data.article_open_check === '1') {
-        this.form.article_open_check = true
-      } else {
-        this.form.article_open_check = false
-      }
-      this.form.comment_forbid_keys = res.data.comment_forbid_keys
-      if (res.data.comment_open_check === '1') {
-        this.form.comment_open_check = true
-      } else {
-        this.form.comment_open_check = false
-      }
-      this.form.email_smtp = res.data.email_smtp
-      this.form.email_smtp_port = res.data.email_smtp_port
-      this.form.email_account = res.data.email_account
-      this.form.email_password = res.data.email_password
-      this.form.email_name = res.data.email_name
-      this.form.email_interval_time = res.data.email_interval_time
-      this.form.email_valid_time = res.data.email_valid_time
-      this.form.email_day_error_time = res.data.email_day_error_time
-      this.form.email_code_template = res.data.email_code_template
-      this.form.sms_apikey = res.data.sms_apikey
-      this.form.sms_valid_time = res.data.sms_valid_time
-      this.form.sms_day_error_num = res.data.sms_day_error_num
-      this.form.sms_code_template = res.data.sms_code_template
-      this.form.upload_file_ext = res.data.upload_file_ext
-      this.form.upload_max_size = res.data.upload_max_size
-      this.form.upload_video_file_ext = res.data.upload_video_file_ext
-      this.form.upload_video_max_size = res.data.upload_video_max_size
-      if (res.data.upload_qiniu_status === '1') {
-        this.form.upload_qiniu_status = true
-      } else {
-        this.form.upload_qiniu_status = false
-      }
-      this.form.upload_qiniu_accessKey = res.data.upload_qiniu_accessKey
-      this.form.upload_qiniu_secretKey = res.data.upload_qiniu_secretKey
-      this.form.upload_qiniu_bucket = res.data.upload_qiniu_bucket
-      this.form.upload_qiniu_domain = res.data.upload_qiniu_domain
-      this.form.pay_accesskey = res.data.pay_accesskey
-      this.form.pay_secretkey = res.data.pay_secretkey
-      this.form.pay_callback_url = res.data.pay_callback_url
     },
     async onSubmit() {
       if (this.loading) {
@@ -345,19 +277,13 @@ export default {
       if (res.code === 200) {
         this.form.base_default_avatar = res.data.img_url
         this.avatar_url = URL.createObjectURL(file.raw)
-        this.$refs['upload'].clearFiles()
-        this.loading = false
       } else {
         this.$message({
           type: 'error',
           message: res.msg
         })
-        this.loading = false
       }
-    },
-    beforeUpload(file) {
-      this.loading = true
-      return true
+      this.$refs['uploadAvatar'].clearFiles()
     }
   }
 }

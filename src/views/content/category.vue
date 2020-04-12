@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column align="center" label="图标">
           <template slot-scope="scope">
-            <el-image style="width: 60px; height: 60px" :src="scope.row.icon"></el-image>
+            <el-image style="width: 60px; height: 60px" :src="scope.row.icon" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="排序" width="120">
@@ -268,19 +268,13 @@ export default {
       if (res.code === 200) {
         this.data.icon = res.data.img_url
         this.imgUrl = URL.createObjectURL(file.raw)
-        this.$refs['upload'].clearFiles()
-        this.loading = false
       } else {
         this.$message({
           type: 'error',
           message: res.msg
         })
-        this.loading = false
       }
-    },
-    beforeUpload(file) {
-      this.loading = true
-      return true
+      this.$refs['upload'].clearFiles()
     }
   }
 }

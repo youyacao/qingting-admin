@@ -94,19 +94,13 @@ export default {
       if (res.code === 200) {
         this.form.avatar = res.data.img_url
         this.imgUrl = URL.createObjectURL(file.raw)
-        this.$refs['upload'].clearFiles()
-        this.loading = false
       } else {
         this.$message({
           type: 'error',
           message: res.msg
         })
-        this.loading = false
       }
-    },
-    beforeUpload(file) {
-      this.loading = true
-      return true
+      this.$refs['upload'].clearFiles()
     }
   }
 }

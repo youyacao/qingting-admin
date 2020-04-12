@@ -4,7 +4,7 @@
       <div slot="header">视频列表</div>
       <el-form :inline="true">
         <div class="filter-container">
-          <el-cascader v-model="listQuery.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类"></el-cascader>
+          <el-cascader v-model="listQuery.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
           <el-input v-model="listQuery.username" placeholder="用户ID/手机号/邮箱" style="width: 240px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-input v-model="listQuery.keyword" placeholder="关键字" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column align="center" label="预览图" width="80">
           <template slot-scope="scope">
-            <el-image style="width: 60px; height: 60px" :src="scope.row.thumb"></el-image>
+            <el-image style="width: 60px; height: 60px" :src="scope.row.thumb" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="视频链接">
@@ -91,7 +91,7 @@
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
       <el-form :model="data" label-width="140px">
         <el-form-item label="分类">
-          <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类"></el-cascader>
+          <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
         </el-form-item>
         <el-form-item label="标题">
           <el-input v-model="data.title" placeholder="标题" />
@@ -113,13 +113,15 @@
         </el-form-item>
         <el-form-item label="视频">
           <el-upload
-            ref="upload"
+            ref="uploadVideo"
             class="upload-demo"
             :action="upAction"
             :headers="upHeaders"
             :before-remove="beforeRemove"
-            :limit="1"
-            :file-list="fileList">
+            multiple
+            :limit="3"
+            :file-list="fileList"
+          >
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过10M</div>
           </el-upload>
@@ -292,22 +294,13 @@ export default {
       if (res.code === 200) {
         this.data.thumb = res.data.img_url
         this.imgUrl = URL.createObjectURL(file.raw)
-        this.$refs['upload'].clearFiles()
-        this.loading = false
       } else {
         this.$message({
           type: 'error',
           message: res.msg
         })
-        this.loading = false
       }
-    },
-    beforeUpload(file) {
-      this.loading = true
-      return true
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${ file.name }？`)
+      this.$refs['upload'].clearFiles()
     }
   }
 }
