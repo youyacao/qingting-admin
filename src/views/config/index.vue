@@ -284,6 +284,9 @@ export default {
         })
       }
       this.$refs['uploadAvatar'].clearFiles()
+    },
+    beforeUpload(file) {
+      return true
     }
   }
 }

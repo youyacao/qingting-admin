@@ -101,6 +101,9 @@ export default {
         })
       }
       this.$refs['upload'].clearFiles()
+    },
+    beforeUpload(file) {
+      return true
     }
   }
 }
