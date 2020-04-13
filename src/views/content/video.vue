@@ -44,12 +44,12 @@
         </el-table-column>
         <el-table-column align="center" label="预览图" width="80">
           <template slot-scope="scope">
-            <el-image style="width: 60px; height: 60px" :src="scope.row.thumb" />
+            <el-image style="width: 60px; height: 60px" :src="scope.row.thumb2" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="视频链接">
           <template slot-scope="scope">
-            <el-link :href="scope.row.video_url" target="_blank" type="primary">查看视频</el-link>
+            <el-link :href="scope.row.video_url2" target="_blank" type="primary">查看视频</el-link>
           </template>
         </el-table-column>
         <el-table-column align="center" label="发布时间" width="100">
@@ -88,7 +88,7 @@
         @size-change="handleSizeChange"
       />
     </el-card>
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑视频':'新增视频'">
       <el-form v-loading="loadingForm" :model="data" label-width="140px">
         <el-form-item label="分类">
           <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
@@ -266,7 +266,12 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
-      this.imgUrl = this.data.thumb
+      this.imgUrl = this.data.thumb2
+      this.fileList = []
+      this.fileList.push({
+        name: '视频',
+        url: this.data.thumb2
+      })
       this.$nextTick(() => {
         this.checkStrictly = false
       })
@@ -300,6 +305,7 @@ export default {
         type: 'success',
         message: '保存成功'
       })
+      this.$refs['uploadVideo'].clearFiles()
     },
     handleSuccess(res, file) {
       if (res.code === 200) {
