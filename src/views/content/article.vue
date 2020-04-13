@@ -1,18 +1,22 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">评论列表</div>
+      <div slot="header">图文列表</div>
       <el-form :inline="true">
         <div class="filter-container">
-          <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
           <el-select v-model="listQuery.type" placeholder="全部" clearable style="width: 90px" class="filter-item">
             <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
           <el-input v-model="listQuery.keyword" placeholder="用户名/手机号/邮箱" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          <el-input v-model="listQuery.keyword" placeholder="关键字" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
+            <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
+          </el-button>
+          <el-button class="filter-item" style="margin-left: 0px;" type="success" icon="el-icon-edit" @click="handleCreate">
+            新增
           </el-button>
         </div>
       </el-form>
@@ -23,24 +27,24 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="用户名/手机号/邮箱" width="200">
+        <el-table-column align="center" label="发布用户" width="200">
           <template slot-scope="scope">
             {{ scope.row.username }}<br>
             {{ scope.row.phone }}<br>
             {{ scope.row.email }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="评论分类" width="100">
+        <el-table-column align="center" label="类型" width="100">
           <template slot-scope="scope">
-            {{ scope.row.type_str }}
+            {{ typeOptions[scope.row.type] }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="评论对象ID" width="120">
+        <el-table-column align="center" label="标题" width="120">
           <template slot-scope="scope">
-            {{ scope.row.vid }}
+            {{ scope.row.title }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="评论内容">
+        <el-table-column align="center" label="内容">
           <template slot-scope="scope">
             {{ scope.row.content }}
           </template>
@@ -81,10 +85,36 @@
         @size-change="handleSizeChange"
       />
     </el-card>
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑图文':'新增图文'">
       <el-form :model="data" label-width="140px">
-        <el-form-item label="评论内容">
+        <el-form-item label="分类">
+          <el-select v-model="data.type" placeholder="全部" clearable style="width: 200px" class="filter-item">
+            <el-option v-for="(item, index) in typeOptions" :key="index" :label="item" :value="index" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="标题">
+          <el-input v-model="data.title" placeholder="标题" />
+        </el-form-item>
+        <el-form-item label="内容">
           <el-input v-model="data.content" type="textarea" :autosize="{ minRows: 2, maxRows: 10}" placeholder="" />
+        </el-form-item>
+        <el-form-item label="视频">
+          <el-upload
+            ref="upload"
+            class="upload-demo"
+            :action="upAction"
+            :headers="upHeaders"
+            :on-remove="handleRemove"
+            :file-list="fileList"
+            list-type="picture"
+            multiple
+            :limit="9"
+            :on-success="handleSuccess"
+            :before-upload="beforeUpload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg|jpeg|png|gif文件，且不超过2M</div>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -97,11 +127,15 @@
 
 <script>
 import { deepClone } from '@/utils'
-import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/comment'
+import { getDatas, addData, deleteData, updateData, batchDisable, getTypeOptions } from '@/api/article'
+import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
-  content: ''
+  type: '',
+  title: '',
+  content: '',
+  images: []
 }
 
 export default {
@@ -123,24 +157,7 @@ export default {
           label: '审核通过'
         }
       ],
-      typeOptions: [
-        {
-          value: '',
-          label: '全部'
-        },
-        {
-          value: '1',
-          label: '短视频'
-        },
-        {
-          value: '2',
-          label: '图文'
-        },
-        {
-          value: '3',
-          label: '直播'
-        }
-      ],
+      typeOptions: [],
       listQuery: {
         page: 1,
         limit: 10,
@@ -153,6 +170,11 @@ export default {
         status: 1
       },
       data: Object.assign({}, defaultData),
+      fileList: [],
+      upAction: process.env.VUE_APP_BASE_API + '/upload',
+      upHeaders: {
+        Authorization: getToken()
+      },
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false
@@ -160,6 +182,7 @@ export default {
   },
   created() {
     this.getList()
+    this.handleTypeOptions()
   },
   methods: {
     async getList() {
@@ -181,6 +204,12 @@ export default {
       this.batch.status = status
       await batchDisable(this.batch)
       this.getList()
+    },
+    async handleTypeOptions() {
+      const res = await getTypeOptions()
+      if (res.code === 200) {
+        this.typeOptions = res.data
+      }
     },
     handleSelectionChange(obj) {
       this.batch.selection = []
@@ -252,6 +281,26 @@ export default {
         type: 'success',
         message: '保存成功'
       })
+    },
+    beforeUpload(file) {
+      return true
+    },
+    handleRemove(file, fileList) {
+    },
+    handleSuccess(res, file) {
+      if (res.code === 200) {
+        this.data.images.push(res.data.img_url)
+        this.fileList.push({
+          name: res.data.name,
+          url: res.data.url
+        })
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+      }
+      this.$refs['upload'].clearFiles()
     }
   }
 }

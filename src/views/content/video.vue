@@ -37,7 +37,7 @@
             {{ scope.row.category_name }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="标题" width="120">
+        <el-table-column align="center" label="标题">
           <template slot-scope="scope">
             {{ scope.row.title }}
           </template>
@@ -50,7 +50,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="视频链接">
+        <el-table-column align="center" label="视频链接" width="80">
           <template slot-scope="scope">
             <el-link :href="scope.row.video_url2" target="_blank" type="primary">查看视频</el-link>
           </template>
@@ -335,9 +335,9 @@ export default {
       this.data.video_url = ''
     },
     handleVideoSuccess(res, file) {
-      this.data.video_url = res.data.video_url
-      this.data.video_thumb_url = res.data.img
       if (res.code === 200) {
+        this.data.video_url = res.data.video_url
+        this.data.video_thumb_url = res.data.img
         this.fileList.push({
           name: res.data.name,
           url: res.data.img_url

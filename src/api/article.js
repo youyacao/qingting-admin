@@ -1,41 +1,54 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function getData(id) {
   return request({
-    url: '/vue-element-admin/article/list',
-    method: 'get',
-    params: query
+    url: `article/${id}`,
+    method: 'get'
   })
 }
 
-export function fetchArticle(id) {
+export function getDatas(data) {
   return request({
-    url: '/vue-element-admin/article/detail',
+    url: 'article',
     method: 'get',
-    params: { id }
+    params: data
   })
 }
 
-export function fetchPv(pv) {
+export function addData(data) {
   return request({
-    url: '/vue-element-admin/article/pv',
-    method: 'get',
-    params: { pv }
-  })
-}
-
-export function createArticle(data) {
-  return request({
-    url: '/vue-element-admin/article/create',
+    url: 'article',
     method: 'post',
     data
   })
 }
 
-export function updateArticle(data) {
+export function updateData(id, data) {
   return request({
-    url: '/vue-element-admin/article/update',
+    url: `article/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+export function deleteData(id) {
+  return request({
+    url: `article/${id}`,
+    method: 'delete'
+  })
+}
+
+export function batchDisable(data) {
+  return request({
+    url: `article/batchDisable`,
     method: 'post',
     data
+  })
+}
+
+export function getTypeOptions() {
+  return request({
+    url: `article/getTypeOptions`,
+    method: 'post'
   })
 }

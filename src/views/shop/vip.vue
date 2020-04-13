@@ -246,7 +246,7 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
-      this.imgUrl = this.data.icon
+      this.imgUrl = this.data.icon2
       if (this.data.pid === 0) {
         this.data.pid = ''
       }

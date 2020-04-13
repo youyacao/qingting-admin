@@ -55,7 +55,7 @@
         </el-table-column>
         <el-table-column align="center" label="跳转链接">
           <template slot-scope="scope">
-            <el-link  v-if="scope.row.add_url2" :href="scope.row.add_url2" target="_blank" type="primary">查看链接</el-link>
+            <el-link v-if="scope.row.add_url2" :href="scope.row.add_url2" target="_blank" type="primary">查看链接</el-link>
           </template>
         </el-table-column>
         <el-table-column align="center" label="到期时间" width="120">
@@ -290,7 +290,6 @@ export default {
       const res = await getTypeOptions()
       if (res.code === 200) {
         this.typeOptions = res.data
-        console.log(this.typeOptions)
       }
     },
     handleSelectionChange(obj) {
@@ -393,8 +392,8 @@ export default {
       this.data.video_url = ''
     },
     handleVideoSuccess(res, file) {
-      this.data.video_url = res.data.video_url
       if (res.code === 200) {
+        this.data.video_url = res.data.video_url
         this.fileList.push({
           name: res.data.name,
           url: res.data.img_url
