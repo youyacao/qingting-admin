@@ -172,6 +172,29 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/shop',
+    component: Layout,
+    redirect: '/shop/vip',
+    alwaysShow: true, // will always show the root menu
+    name: 'Shop',
+    meta: {
+      title: '商品管理',
+      icon: 'table',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'vip',
+        component: () => import('@/views/shop/vip'),
+        name: 'Vip',
+        meta: {
+          title: 'VIP商品列表',
+          roles: ['admin', 'editor']
+        }
+      }
+    ]
+  },
+  {
     path: '/advert',
     component: Layout,
     redirect: '/advert/index',
@@ -185,7 +208,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        // component: () => import('@/views/video/index'),
+        component: () => import('@/views/advert/index'),
         name: 'Index',
         meta: {
           title: '广告列表',

@@ -40,6 +40,14 @@
             {{ scope.row.email }}
           </template>
         </el-table-column>
+        <el-table-column align="center" label="头像">
+          <template slot-scope="scope">
+            <el-popover placement="right" title="" trigger="hover">
+              <img :src="scope.row.avatar2" style="max-height: 200px">
+              <img slot="reference" :src="scope.row.avatar2" :alt="scope.row.avatar2" style="max-height: 80px; max-width: 80px">
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="VIP过期时间">
           <template slot-scope="scope">
             {{ scope.row.vip_end_time ? scope.row.vip_end_time:'未开通' }}
@@ -105,6 +113,21 @@
         <el-form-item label="邮箱">
           <el-input v-model="data.email" placeholder="邮箱" />
         </el-form-item>
+        <el-form-item label="头像">
+          <el-upload
+            ref="upload"
+            class="avatar-uploader"
+            :action="upAction"
+            :headers="upHeaders"
+            :limit="1"
+            :show-file-list="false"
+            :on-success="handleSuccess"
+            :before-upload="beforeUpload"
+          >
+            <img v-if="imgUrl" :src="imgUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </el-form-item>
         <el-form-item label="VIP过期时间">
           <el-date-picker v-model="data.vip_end_time" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" />
         </el-form-item>
@@ -120,6 +143,7 @@
 <script>
 import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/users'
+import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
@@ -127,6 +151,7 @@ const defaultData = {
   password: '',
   phone: '',
   email: '',
+  avatar: '',
   vip_end_time: ''
 }
 
@@ -161,6 +186,11 @@ export default {
         status: 1
       },
       data: Object.assign({}, defaultData),
+      imgUrl: '',
+      upAction: process.env.VUE_APP_BASE_API + '/upload',
+      upHeaders: {
+        Authorization: getToken()
+      },
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false
@@ -221,6 +251,7 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
+      this.imgUrl = this.data.avatar2
       if (this.data.vip_end_time === '0000-00-00') {
         this.data.vip_end_time = ''
       }
@@ -263,6 +294,21 @@ export default {
         type: 'success',
         message: '保存成功'
       })
+    },
+    handleSuccess(res, file) {
+      if (res.code === 200) {
+        this.data.avatar = res.data.img_url
+        this.imgUrl = URL.createObjectURL(file.raw)
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+      }
+      this.$refs['upload'].clearFiles()
+    },
+    beforeUpload(file) {
+      return true
     }
   }
 }
@@ -273,5 +319,28 @@ export default {
   .permission-tree {
     margin-bottom: 30px;
   }
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
 }
 </style>

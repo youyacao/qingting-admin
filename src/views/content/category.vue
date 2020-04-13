@@ -29,7 +29,10 @@
         </el-table-column>
         <el-table-column align="center" label="图标">
           <template slot-scope="scope">
-            <el-image style="width: 60px; height: 60px" :src="scope.row.icon" />
+            <el-popover placement="right" title="" trigger="hover">
+              <img :src="scope.row.icon2" style="max-height: 200px">
+              <img slot="reference" :src="scope.row.icon2" :alt="scope.row.icon2" style="max-height: 80px; max-width: 80px">
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column align="center" label="排序" width="120">
@@ -99,7 +102,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="data.sort" placeholder="排序" />
+          <el-input v-model="data.sort" placeholder="排序（越小排序靠前）" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -226,7 +229,7 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
-      this.imgUrl = this.data.icon
+      this.imgUrl = this.data.icon2
       if (this.data.pid === 0) {
         this.data.pid = ''
       }
