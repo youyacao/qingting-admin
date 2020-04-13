@@ -132,7 +132,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="视频地址">
-          <el-input v-model="data.video_url2" placeholder="视频地址优先" />
+          <el-input v-model="data.video_url_full" placeholder="视频地址优先" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -154,7 +154,8 @@ const defaultData = {
   category_id: '',
   title: '',
   thumb: '',
-  video_url: ''
+  video_url: '',
+  video_thumb_url: ''
 }
 
 export default {
@@ -321,12 +322,17 @@ export default {
       return true
     },
     handleVideoRemove(file, fileList) {
-      console.log(file, fileList)
+      this.fileList = []
+      this.data.video_url = ''
     },
     handleVideoSuccess(res, file) {
+      this.data.video_url = res.data.video_url
+      this.data.video_thumb_url = res.data.img
       if (res.code === 200) {
-        this.data.thumb = res.data.img_url
-        this.imgUrl = URL.createObjectURL(file.raw)
+        this.fileList.push({
+          name: res.data.name,
+          url: res.data.img_url
+        })
       } else {
         this.$message({
           type: 'error',

@@ -162,6 +162,9 @@
           <el-form-item label="七牛云domain">
             <el-input v-model="form.upload_qiniu_domain" />
           </el-form-item>
+          <el-form-item label="七牛云视频截图">
+            <el-input v-model="form.upload_qiniu_video_thumb" />
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
             <el-button @click="onBack">返 回</el-button>
@@ -243,6 +246,7 @@ export default {
         upload_qiniu_secretKey: '',
         upload_qiniu_bucket: '',
         upload_qiniu_domain: '',
+        upload_qiniu_video_thumb: '',
         pay_accesskey: '',
         pay_secretkey: '',
         pay_callback_url: ''
