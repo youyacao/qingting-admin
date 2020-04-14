@@ -5,7 +5,7 @@
       <el-form :inline="true">
         <div class="filter-container">
           <el-select v-model="listQuery.type" placeholder="全部" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="(item, index) in typeOptions" :key="index" :label="item" :value="index" />
           </el-select>
           <el-input v-model="listQuery.keyword" placeholder="用户名/手机号/邮箱" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-input v-model="listQuery.keyword" placeholder="关键字" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -89,7 +89,7 @@
       <el-form :model="data" label-width="140px">
         <el-form-item label="分类">
           <el-select v-model="data.type" placeholder="全部" clearable style="width: 200px" class="filter-item">
-            <el-option v-for="(item, index) in typeOptions" :key="index" :label="item" :value="index" />
+            <el-option v-for="(item, index) in typeOptions" :key="parseInt(index)" :label="item" :value="parseInt(index)" />
           </el-select>
         </el-form-item>
         <el-form-item label="标题">

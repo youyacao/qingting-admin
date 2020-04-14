@@ -163,10 +163,10 @@ export default {
           label: '全部'
         },
         {
-          value: '1',
+          value: 1,
           label: '开通会员'
         }, {
-          value: '2',
+          value: 2,
           label: '开通代理'
         }
       ],
@@ -247,9 +247,6 @@ export default {
       this.checkStrictly = true
       this.data = deepClone(scope.row)
       this.imgUrl = this.data.icon2
-      if (this.data.pid === 0) {
-        this.data.pid = ''
-      }
       this.$nextTick(() => {
         this.checkStrictly = false
       })

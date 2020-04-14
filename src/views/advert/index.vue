@@ -113,7 +113,7 @@
       <el-form :model="data" label-width="140px">
         <el-form-item label="分类">
           <el-select v-model="data.type" placeholder="全部" clearable style="width: 200px" class="filter-item">
-            <el-option v-for="(item, index) in typeOptions" :key="item" :label="item" :value="index" />
+            <el-option v-for="(item, index) in typeOptions" :key="parseInt(index)" :label="item" :value="parseInt(index)" />
           </el-select>
         </el-form-item>
         <el-form-item label="推广商">
@@ -231,10 +231,10 @@ export default {
       ],
       openTypeOptions: [
         {
-          value: '1',
+          value: 1,
           label: '直接下载'
         }, {
-          value: '2',
+          value: 2,
           label: '浏览器打开'
         }
       ],
