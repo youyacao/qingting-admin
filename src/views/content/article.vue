@@ -4,6 +4,7 @@
       <div slot="header">图文列表</div>
       <el-form :inline="true">
         <div class="filter-container">
+          <el-cascader v-model="listQuery.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
           <el-select v-model="listQuery.type" placeholder="全部" clearable style="width: 90px" class="filter-item">
             <el-option v-for="(item, index) in typeOptions" :key="index" :label="item" :value="index" />
           </el-select>
@@ -34,6 +35,11 @@
             {{ scope.row.email }}
           </template>
         </el-table-column>
+        <el-table-column align="center" label="分类" width="100">
+          <template slot-scope="scope">
+            {{ scope.row.category_name }}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="类型" width="100">
           <template slot-scope="scope">
             {{ typeOptions[scope.row.type] }}
@@ -47,6 +53,11 @@
         <el-table-column align="center" label="内容">
           <template slot-scope="scope">
             {{ scope.row.content }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="图片" width="120">
+          <template slot-scope="scope">
+            <el-image style="width: 100px; height: 100px" v-if="scope.row.images_list[0]" :src="scope.row.images_list[0]" :preview-src-list="scope.row.images_list"></el-image>
           </template>
         </el-table-column>
         <el-table-column align="center" label="创建时间" width="180">
@@ -86,8 +97,11 @@
       />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑图文':'新增图文'">
-      <el-form :model="data" label-width="140px">
+      <el-form :model="data" label-width="140px" v-loading="loadingForm">
         <el-form-item label="分类">
+          <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
+        </el-form-item>
+        <el-form-item label="类型">
           <el-select v-model="data.type" placeholder="全部" clearable style="width: 200px" class="filter-item">
             <el-option v-for="(item, index) in typeOptions" :key="parseInt(index)" :label="item" :value="parseInt(index)" />
           </el-select>
@@ -98,7 +112,7 @@
         <el-form-item label="内容">
           <el-input v-model="data.content" type="textarea" :autosize="{ minRows: 2, maxRows: 10}" placeholder="" />
         </el-form-item>
-        <el-form-item label="视频">
+        <el-form-item label="图片">
           <el-upload
             ref="upload"
             class="upload-demo"
@@ -107,7 +121,6 @@
             :on-remove="handleRemove"
             :file-list="fileList"
             list-type="picture"
-            multiple
             :limit="9"
             :on-success="handleSuccess"
             :before-upload="beforeUpload"
@@ -128,10 +141,12 @@
 <script>
 import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData, batchDisable, getTypeOptions } from '@/api/article'
+import { getCategoryOptions } from '../../api/category'
 import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
+  category_id: '',
   type: '',
   title: '',
   content: '',
@@ -142,6 +157,7 @@ export default {
   data() {
     return {
       loading: false,
+      loadingForm: false,
       list: [],
       total: 0,
       statusOptions: [
@@ -157,6 +173,7 @@ export default {
           label: '审核通过'
         }
       ],
+      categoryOptions: [],
       typeOptions: [],
       listQuery: {
         page: 1,
@@ -171,6 +188,7 @@ export default {
       },
       data: Object.assign({}, defaultData),
       fileList: [],
+      images: [],
       upAction: process.env.VUE_APP_BASE_API + '/upload',
       upHeaders: {
         Authorization: getToken()
@@ -182,6 +200,7 @@ export default {
   },
   created() {
     this.getList()
+    this.handleCategoryOptions()
     this.handleTypeOptions()
   },
   methods: {
@@ -205,6 +224,12 @@ export default {
       await batchDisable(this.batch)
       this.getList()
     },
+    async handleCategoryOptions() {
+      const res = await getCategoryOptions()
+      if (res.code === 200) {
+        this.categoryOptions = res.data
+      }
+    },
     async handleTypeOptions() {
       const res = await getTypeOptions()
       if (res.code === 200) {
@@ -220,9 +245,6 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
-    },
-    handleCheckedChange(val) {
-      this.data.roles = val
     },
     handleSizeChange(val) {
       this.listQuery.limit = val
@@ -242,6 +264,15 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
+      this.images = this.data.images
+      this.fileList = []
+      for (const key in this.data.images_list) {
+        this.fileList.push({
+          name: '图片' + key,
+          img_url: this.data.images[key],
+          url: this.data.images_list[key]
+        })
+      }
       this.$nextTick(() => {
         this.checkStrictly = false
       })
@@ -266,16 +297,10 @@ export default {
       const isEdit = this.dialogType === 'edit'
       if (isEdit) {
         await updateData(this.data.id, this.data)
-        for (let index = 0; index < this.list.length; index++) {
-          if (this.list[index].id === this.data.id) {
-            this.list.splice(index, 1, Object.assign({}, this.data))
-            break
-          }
-        }
       } else {
         await addData(this.data)
-        this.getList()
       }
+      this.getList()
       this.dialogVisible = false
       this.$message({
         type: 'success',
@@ -283,15 +308,38 @@ export default {
       })
     },
     beforeUpload(file) {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+        this.$message({
+          type: 'error',
+          message: '图片格式不正确'
+        })
+        return false
+      }
+      this.loadingForm = true
       return true
     },
     handleRemove(file, fileList) {
+      // 移除文件时，要重新给fileList赋值
+      const arr = []
+      const images = []
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].uid !== file.uid) {
+          arr.push(this.fileList[i])
+          images.push(this.fileList[i].img_url)
+        }
+      }
+      this.fileList = arr
+      this.images = images
+      this.data.images = images
     },
-    handleSuccess(res, file) {
+    handleSuccess(res, file, fileList) {
+      this.loadingForm = false
       if (res.code === 200) {
-        this.data.images.push(res.data.img_url)
+        this.images.push(res.data.img_url)
+        this.data.images = this.images
         this.fileList.push({
           name: res.data.name,
+          img_url: res.data.img_url,
           url: res.data.url
         })
       } else {
@@ -300,7 +348,6 @@ export default {
           message: res.msg
         })
       }
-      this.$refs['upload'].clearFiles()
     }
   }
 }

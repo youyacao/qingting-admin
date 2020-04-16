@@ -230,9 +230,6 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleCheckedChange(val) {
-      this.data.roles = val
-    },
     handleSizeChange(val) {
       this.listQuery.limit = val
       this.getList()
@@ -252,7 +249,7 @@ export default {
       this.checkStrictly = true
       this.data = deepClone(scope.row)
       this.imgUrl = this.data.avatar2
-      if (this.data.vip_end_time === '0000-00-00') {
+      if (this.data.vip_end_time === '0') {
         this.data.vip_end_time = ''
       }
       this.$nextTick(() => {
@@ -279,12 +276,7 @@ export default {
       const isEdit = this.dialogType === 'edit'
       if (isEdit) {
         await updateData(this.data.id, this.data)
-        for (let index = 0; index < this.list.length; index++) {
-          if (this.list[index].id === this.data.id) {
-            this.list.splice(index, 1, Object.assign({}, this.data))
-            break
-          }
-        }
+        this.getList()
       } else {
         await addData(this.data)
         this.getList()

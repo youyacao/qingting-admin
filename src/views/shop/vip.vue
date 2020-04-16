@@ -224,9 +224,6 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleCheckedChange(val) {
-      this.data.roles = val
-    },
     handleSizeChange(val) {
       this.listQuery.limit = val
       this.getList()
