@@ -201,28 +201,26 @@
             <el-input v-model="form.login_weixin_redirect_uri" />
           </el-form-item>
           <el-divider content-position="center">QQ配置</el-divider>
-          <el-form ref="form" :model="form" label-width="200px">
-            <el-form-item label="QQ公钥">
-              <el-input v-model="form.login_qq_key" />
-            </el-form-item>
-            <el-form-item label="QQ秘钥">
-              <el-input v-model="form.login_qq_secret" />
-            </el-form-item>
-            <el-form-item label="QQredirect_uri">
-              <el-input v-model="form.login_qq_redirect_uri" />
-            </el-form-item>
-            <el-divider content-position="center">微博配置</el-divider>
-            <el-form ref="form" :model="form" label-width="200px">
-              <el-form-item label="微博公钥">
-                <el-input v-model="form.login_weibo_key" />
-              </el-form-item>
-              <el-form-item label="微博秘钥">
-                <el-input v-model="form.login_weibo_secret" />
-              </el-form-item>
-              <el-form-item label="微博redirect_uri">
-                <el-input v-model="form.login_weibo_redirect_uri" />
-              </el-form-item>
-            <el-form-item>
+          <el-form-item label="QQ公钥">
+            <el-input v-model="form.login_qq_key" />
+          </el-form-item>
+          <el-form-item label="QQ秘钥">
+            <el-input v-model="form.login_qq_secret" />
+          </el-form-item>
+          <el-form-item label="QQredirect_uri">
+            <el-input v-model="form.login_qq_redirect_uri" />
+          </el-form-item>
+          <el-divider content-position="center">微博配置</el-divider>
+          <el-form-item label="微博公钥">
+            <el-input v-model="form.login_weibo_key" />
+          </el-form-item>
+          <el-form-item label="微博秘钥">
+            <el-input v-model="form.login_weibo_secret" />
+          </el-form-item>
+          <el-form-item label="微博redirect_uri">
+            <el-input v-model="form.login_weibo_redirect_uri" />
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
             <el-button @click="onBack">返 回</el-button>
           </el-form-item>
