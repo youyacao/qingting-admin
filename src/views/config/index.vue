@@ -281,13 +281,10 @@ export default {
         pay_callback_url: '',
         login_weixin_key: '',
         login_weixin_secret: '',
-        login_weixin_redirect_uri: '',
         login_qq_key: '',
         login_qq_secret: '',
-        login_qq_redirect_uri: '',
         login_weibo_key: '',
-        login_weibo_secret: '',
-        login_weibo_redirect_uri: ''
+        login_weibo_secret: ''
       }
     }
   },
