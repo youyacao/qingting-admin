@@ -53,6 +53,19 @@
             placeholder="角色描述"
           />
         </el-form-item>
+        <el-form-item label="权限分配">
+          <el-tree
+            ref="tree"
+            :check-strictly="checkStrictly"
+            :data="routesData"
+            :props="defaultProps"
+            show-checkbox
+            :default-checked-keys="routes"
+            node-key="id"
+            class="permission-tree"
+            @check-change="handleCheckChange"
+          />
+        </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" size="small" @click="dialogVisible=false">取 消</el-button>
@@ -65,11 +78,13 @@
 <script>
 import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData } from '@/api/role'
+import { getRoutes } from '@/api/permission'
 
 const defaultData = {
   id: '',
   name: '',
-  description: ''
+  description: '',
+  routes: []
 }
 
 export default {
@@ -85,11 +100,18 @@ export default {
       data: Object.assign({}, defaultData),
       dialogVisible: false,
       dialogType: 'new',
-      checkStrictly: false
+      checkStrictly: false,
+      defaultProps: {
+        children: 'children',
+        label: 'title'
+      },
+      routes: [],
+      routesData: []
     }
   },
   created() {
     // Mock: get all routes and roles list from server
+    this.getRoutes()
     this.getList()
   },
   methods: {
@@ -99,6 +121,11 @@ export default {
       this.list = res.data.data
       this.total = res.data.total
       this.listQuery.page = res.data.current_page
+      this.loading = false
+    },
+    async getRoutes() {
+      const res = await getRoutes(this.page, this.limit)
+      this.routesData = res.data
       this.loading = false
     },
     handleSizeChange(val) {
@@ -119,6 +146,8 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
+      this.routes = []
+      this.routes = this.data.routes
       this.$nextTick(() => {
         this.checkStrictly = false
       })
@@ -140,24 +169,33 @@ export default {
         .catch(err => { console.error(err) })
     },
     async confirmData() {
+      this.data.routes = this.routes
       const isEdit = this.dialogType === 'edit'
       if (isEdit) {
         await updateData(this.data.id, this.data)
-        for (let index = 0; index < this.list.length; index++) {
-          if (this.list[index].id === this.data.id) {
-            this.list.splice(index, 1, Object.assign({}, this.data))
-            break
-          }
-        }
       } else {
         await addData(this.data)
-        this.getList()
       }
+      this.getList()
+      this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys([])
+      })
       this.dialogVisible = false
       this.$message({
         type: 'success',
         message: '保存成功'
       })
+    },
+    handleCheckChange(data, checked, indeterminate) {
+      if (checked) {
+        this.routes.push(data.id)
+      } else {
+        this.delRoute(data.id)
+      }
+    },
+    delRoute(i) {
+      const index = this.routes.indexOf(i)
+      this.routes.splice(index, 1)
     }
   }
 }
