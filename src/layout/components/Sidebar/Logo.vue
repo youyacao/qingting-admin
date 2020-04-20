@@ -24,8 +24,8 @@ export default {
   },
   data() {
     return {
-      title: '管理后台',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      title: '蜻蜓系统X3.0',
+      logo: require('../../../assets/logo.png')
     }
   }
 }
