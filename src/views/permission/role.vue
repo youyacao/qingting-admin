@@ -68,7 +68,7 @@
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
-        <el-button type="danger" size="small" @click="dialogVisible=false">取 消</el-button>
+        <el-button type="danger" size="small" @click="handleCancel">取 消</el-button>
         <el-button type="primary" size="small" @click="confirmData">确 认</el-button>
       </div>
     </el-dialog>
@@ -141,6 +141,12 @@ export default {
       this.dialogType = 'new'
       this.dialogVisible = true
     },
+    handleCancel() {
+      this.getRoutes()
+      this.routes = []
+      this.dialogVisible = false
+      this.routes = []
+    },
     handleEdit(scope) {
       this.dialogType = 'edit'
       this.dialogVisible = true
@@ -176,10 +182,9 @@ export default {
       } else {
         await addData(this.data)
       }
+      this.getRoutes()
       this.getList()
-      this.$nextTick(() => {
-        this.$refs.tree.setCheckedKeys([])
-      })
+      this.routes = []
       this.dialogVisible = false
       this.$message({
         type: 'success',

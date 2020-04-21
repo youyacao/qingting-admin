@@ -10,7 +10,7 @@
         </div>
       </el-form>
       <el-table ref="multipleTable" v-loading="loading" tooltip-effect="dark" :data="list" style="width: 100%;" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" stripe @selection-change="handleSelectionChange">
-        <el-table-column align="left" label="ID" width="60">
+        <el-table-column align="left" label="ID" width="100">
           <template slot-scope="scope">
             {{ scope.row.id }}
           </template>
