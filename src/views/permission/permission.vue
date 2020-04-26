@@ -15,7 +15,7 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="权限名称" width="200">
+        <el-table-column align="center" label="权限名称">
           <template slot-scope="scope">
             {{ scope.row.title }}<br>
           </template>

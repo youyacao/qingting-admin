@@ -17,18 +17,18 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作账号">
+        <el-table-column align="center" label="操作账号" width="120">
           <template slot-scope="scope">
             {{ scope.row.username }}<br>
             {{ scope.row.phone }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="code">
+        <el-table-column align="center" label="code" width="80">
           <template slot-scope="scope">
             {{ scope.row.code }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="msg">
+        <el-table-column align="center" label="msg" width="100">
           <template slot-scope="scope">
             {{ scope.row.msg }}
           </template>
@@ -43,12 +43,12 @@
             {{ scope.row.action }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="IP">
+        <el-table-column align="center" label="IP" width="120">
           <template slot-scope="scope">
             {{ scope.row.ip }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="时间">
+        <el-table-column align="center" label="时间" width="160">
           <template slot-scope="scope">
             {{ scope.row.created_at }}
           </template>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { adminLog } from '@/api/users'
+import { adminLog } from '@/api/admin'
 
 export default {
   data() {

@@ -120,7 +120,7 @@ export const asyncRoutes = [
       },
       {
         path: 'profile',
-        component: () => import('@/views/user/profile'),
+        component: () => import('@/views/permission/profile'),
         hidden: true
       },
       {
@@ -253,9 +253,9 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'user',
-        component: () => import('@/views/permission/user'),
-        name: 'User',
+        path: 'admin',
+        component: () => import('@/views/permission/admin'),
+        name: 'Admin',
         meta: {
           title: '管理员列表',
           roles: ['admin']
@@ -263,7 +263,7 @@ export const asyncRoutes = [
       },
       {
         path: 'adminLog',
-        component: () => import('@/views/user/adminLog'),
+        component: () => import('@/views/permission/adminLog'),
         name: 'AdminLog',
         meta: {
           title: '管理员日志',
