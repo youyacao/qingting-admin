@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function getData(id) {
   return request({
-    url: `permission/users/${id}`,
+    url: `users/${id}`,
     method: 'get'
   })
 }
 
 export function getDatas(data) {
   return request({
-    url: 'permission/users',
+    url: 'users',
     method: 'get',
     params: data
   })
@@ -17,7 +17,7 @@ export function getDatas(data) {
 
 export function addData(data) {
   return request({
-    url: 'permission/users',
+    url: 'users',
     method: 'post',
     data
   })
@@ -25,7 +25,7 @@ export function addData(data) {
 
 export function updateData(id, data) {
   return request({
-    url: `permission/users/${id}`,
+    url: `users/${id}`,
     method: 'put',
     data
   })
@@ -33,7 +33,7 @@ export function updateData(id, data) {
 
 export function deleteData(id) {
   return request({
-    url: `permission/users/${id}`,
+    url: `users/${id}`,
     method: 'delete'
   })
 }

@@ -5,6 +5,9 @@ const tokens = {
   },
   editor: {
     token: 'editor-token'
+  },
+  demo: {
+    token: 'demo-token'
   }
 }
 
@@ -18,6 +21,12 @@ const users = {
   'editor-token': {
     roles: ['editor'],
     introduction: 'I am an editor',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'Normal Editor'
+  },
+  'demo-token': {
+    roles: ['demo'],
+    introduction: 'I am an demo',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal Editor'
   }

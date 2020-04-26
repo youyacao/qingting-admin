@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getRoles() {
   return request({
-    url: 'permission/roles',
+    url: 'roles',
     method: 'get',
     params: { page: 1, limit: 100 }
   })
@@ -10,7 +10,7 @@ export function getRoles() {
 
 export function getDatas(data) {
   return request({
-    url: 'permission/roles',
+    url: 'roles',
     method: 'get',
     params: data
   })
@@ -18,7 +18,7 @@ export function getDatas(data) {
 
 export function addData(data) {
   return request({
-    url: 'permission/roles',
+    url: 'roles',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function addData(data) {
 
 export function updateData(id, data) {
   return request({
-    url: `permission/roles/${id}`,
+    url: `roles/${id}`,
     method: 'put',
     data
   })
@@ -34,7 +34,7 @@ export function updateData(id, data) {
 
 export function deleteData(id) {
   return request({
-    url: `permission/roles/${id}`,
+    url: `roles/${id}`,
     method: 'delete'
   })
 }

@@ -18,8 +18,8 @@ const roles = [
     routes: routes.filter(i => i.path !== '/permission')// just a mock
   },
   {
-    key: 'visitor',
-    name: 'visitor',
+    key: 'guest',
+    name: 'guest',
     description: 'Just a visitor. Can only see the home page and the document page',
     routes: [{
       path: '',
