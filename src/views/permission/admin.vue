@@ -83,7 +83,7 @@
 
 <script>
 import { deepClone } from '@/utils'
-import { getDatas, addData, deleteData, updateData } from '@/api/users'
+import { getDatas, addData, deleteData, updateData } from '@/api/admin'
 import { getRoles } from '@/api/role'
 
 const defaultData = {
@@ -147,6 +147,7 @@ export default {
       this.getList()
     },
     handleCreate() {
+      this.checkedRoles = []
       this.data = Object.assign({}, defaultData)
       this.dialogType = 'new'
       this.dialogVisible = true

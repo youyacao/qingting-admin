@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { updateProfile } from '../../api/users'
+import { updateProfile } from '../../api/admin'
 import { getInfo } from '../../api/user'
 import { getToken } from '../../utils/auth'
 export default {
