@@ -60,7 +60,6 @@
             :data="routesData"
             :props="defaultProps"
             show-checkbox
-            :default-checked-keys="routes"
             node-key="id"
             class="permission-tree"
             @check-change="handleCheckChange"
@@ -155,6 +154,7 @@ export default {
       this.routes = []
       this.routes = this.data.routes
       this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys(this.routes)
         this.checkStrictly = false
       })
     },

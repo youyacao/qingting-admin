@@ -119,6 +119,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'tags',
+        component: () => import('@/views/user/tags'),
+        name: 'Tags',
+        meta: {
+          title: '标签列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      },
+      {
         path: 'profile',
         component: () => import('@/views/permission/profile'),
         hidden: true
@@ -142,6 +151,15 @@ export const asyncRoutes = [
       roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
     },
     children: [
+      {
+        path: 'topic',
+        component: () => import('@/views/content/topic'),
+        name: 'Topic',
+        meta: {
+          title: '话题列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      },
       {
         path: 'video',
         component: () => import('@/views/content/video'),

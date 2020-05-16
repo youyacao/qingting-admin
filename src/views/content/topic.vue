@@ -1,14 +1,10 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">图文列表</div>
+      <div slot="header">话题列表</div>
       <el-form :inline="true">
         <div class="filter-container">
           <el-cascader v-model="listQuery.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
-          <el-select v-model="listQuery.type" placeholder="全部" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="(item, index) in typeOptions" :key="index" :label="item" :value="index" />
-          </el-select>
-          <el-input v-model="listQuery.username" placeholder="用户名/手机号/邮箱" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-input v-model="listQuery.keyword" placeholder="关键字" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
             <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
@@ -28,36 +24,14 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="发布用户" width="200">
-          <template slot-scope="scope">
-            {{ scope.row.username }}<br>
-            {{ scope.row.phone }}<br>
-            {{ scope.row.email }}
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="分类" width="100">
           <template slot-scope="scope">
             {{ scope.row.category_name }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="类型" width="100">
-          <template slot-scope="scope">
-            {{ typeOptions[scope.row.type] }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="标题" width="120">
+        <el-table-column align="center" label="话题标题">
           <template slot-scope="scope">
             {{ scope.row.title }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="内容">
-          <template slot-scope="scope">
-            {{ scope.row.content }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="图片" width="120">
-          <template slot-scope="scope">
-            <el-image v-if="scope.row.images_list[0]" style="width: 100px; height: 100px" :src="scope.row.images_list[0]" :preview-src-list="scope.row.images_list" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="创建时间" width="180">
@@ -67,8 +41,8 @@
         </el-table-column>
         <el-table-column align="center" label="状态" width="70">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.status == 2" type="success" size="mini">审核通过</el-tag>
-            <el-tag v-else-if="scope.row.status == 1" type="warning" size="mini">待审核</el-tag>
+            <el-tag v-if="scope.row.status == 2" type="success" size="mini">启用</el-tag>
+            <el-tag v-else-if="scope.row.status == 1" type="warning" size="mini">禁用</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
@@ -79,10 +53,10 @@
         </el-table-column>
       </el-table>
       <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="success" @click="handleBatchDisable(2)">
-        批量审核
+        批量启用
       </el-button>
-      <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="warning" @click="handleBatchDisable(0)">
-        批量删除
+      <el-button class="el-pl" plain size="mini" style="margin-left: 0px;" type="warning" @click="handleBatchDisable(1)">
+        批量禁用
       </el-button>
       <el-pagination
         prev-text="上一页"
@@ -96,38 +70,13 @@
         @size-change="handleSizeChange"
       />
     </el-card>
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑图文':'新增图文'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑话题':'新增话题'">
       <el-form v-loading="loadingForm" :model="data" label-width="140px">
         <el-form-item label="分类">
           <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
         </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="data.type" placeholder="全部" clearable style="width: 200px" class="filter-item">
-            <el-option v-for="(item, index) in typeOptions" :key="parseInt(index)" :label="item" :value="parseInt(index)" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="标题">
-          <el-input v-model="data.title" placeholder="标题" />
-        </el-form-item>
-        <el-form-item label="内容">
-          <el-input v-model="data.content" type="textarea" :autosize="{ minRows: 5, maxRows: 20}" placeholder="" />
-        </el-form-item>
-        <el-form-item label="图片">
-          <el-upload
-            ref="upload"
-            class="upload-demo"
-            :action="upAction"
-            :headers="upHeaders"
-            :on-remove="handleRemove"
-            :file-list="fileList"
-            list-type="picture"
-            :limit="9"
-            :on-success="handleSuccess"
-            :before-upload="beforeUpload"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg|jpeg|png|gif文件，且不超过2M</div>
-          </el-upload>
+        <el-form-item label="话题标题">
+          <el-input v-model="data.title" placeholder="话题标题" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -140,17 +89,13 @@
 
 <script>
 import { deepClone } from '@/utils'
-import { getDatas, addData, deleteData, updateData, batchDisable, getTypeOptions } from '@/api/article'
+import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/topic'
 import { getCategoryOptions } from '../../api/category'
-import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
   category_id: '',
-  type: '',
-  title: '',
-  content: '',
-  images: []
+  title: ''
 }
 
 export default {
@@ -167,18 +112,16 @@ export default {
         },
         {
           value: '1',
-          label: '待审核'
+          label: '禁用'
         }, {
           value: '2',
-          label: '审核通过'
+          label: '启用'
         }
       ],
       categoryOptions: [],
-      typeOptions: [],
       listQuery: {
         page: 1,
         limit: 10,
-        username: '',
         keyword: '',
         type: '',
         order: 'DESC'
@@ -188,12 +131,6 @@ export default {
         status: 1
       },
       data: Object.assign({}, defaultData),
-      fileList: [],
-      images: [],
-      upAction: process.env.VUE_APP_BASE_API + '/upload',
-      upHeaders: {
-        Authorization: getToken()
-      },
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false
@@ -202,7 +139,6 @@ export default {
   created() {
     this.getList()
     this.handleCategoryOptions()
-    this.handleTypeOptions()
   },
   methods: {
     async getList() {
@@ -229,12 +165,6 @@ export default {
       const res = await getCategoryOptions()
       if (res.code === 200) {
         this.categoryOptions = res.data
-      }
-    },
-    async handleTypeOptions() {
-      const res = await getTypeOptions()
-      if (res.code === 200) {
-        this.typeOptions = res.data
       }
     },
     handleSelectionChange(obj) {
@@ -265,21 +195,12 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.data = deepClone(scope.row)
-      this.images = this.data.images
-      this.fileList = []
-      for (const key in this.data.images_list) {
-        this.fileList.push({
-          name: '图片' + key,
-          img_url: this.data.images[key],
-          url: this.data.images_list[key]
-        })
-      }
       this.$nextTick(() => {
         this.checkStrictly = false
       })
     },
     handleDelete({ $index, row }) {
-      this.$confirm('确定删除该条数据?', '警告', {
+      this.$confirm('确定禁用该条数据?', '警告', {
         confirmButtonText: '确 定',
         cancelButtonText: '取 消',
         type: 'warning'
@@ -307,48 +228,6 @@ export default {
         type: 'success',
         message: '保存成功'
       })
-    },
-    beforeUpload(file) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/gif') {
-        this.$message({
-          type: 'error',
-          message: '图片格式不正确'
-        })
-        return false
-      }
-      this.loadingForm = true
-      return true
-    },
-    handleRemove(file, fileList) {
-      // 移除文件时，要重新给fileList赋值
-      const arr = []
-      const images = []
-      for (let i = 0; i < this.fileList.length; i++) {
-        if (this.fileList[i].uid !== file.uid) {
-          arr.push(this.fileList[i])
-          images.push(this.fileList[i].img_url)
-        }
-      }
-      this.fileList = arr
-      this.images = images
-      this.data.images = images
-    },
-    handleSuccess(res, file, fileList) {
-      this.loadingForm = false
-      if (res.code === 200) {
-        this.images.push(res.data.img_url)
-        this.data.images = this.images
-        this.fileList.push({
-          name: res.data.name,
-          img_url: res.data.img_url,
-          url: res.data.url
-        })
-      } else {
-        this.$message({
-          type: 'error',
-          message: res.msg
-        })
-      }
     }
   }
 }

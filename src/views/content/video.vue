@@ -284,7 +284,7 @@ export default {
       })
         .then(async() => {
           await deleteData(row.id)
-          this.list.splice($index, 1)
+          this.getList()
           this.$message({
             type: 'success',
             message: '删除成功'
