@@ -45,3 +45,11 @@ export function batchDisable(data) {
     data
   })
 }
+
+export function getTopicList(data) {
+  return request({
+    url: 'topic',
+    method: 'get',
+    params: data
+  })
+}

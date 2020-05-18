@@ -52,3 +52,11 @@ export function getTypeOptions() {
     method: 'post'
   })
 }
+
+export function getUserTags(data) {
+  return request({
+    url: 'userTags',
+    method: 'get',
+    params: data
+  })
+}

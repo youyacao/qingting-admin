@@ -129,6 +129,11 @@
             <div slot="tip" class="el-upload__tip">只能上传jpg|jpeg|png|gif文件，且不超过2M</div>
           </el-upload>
         </el-form-item>
+        <el-form-item label="关联话题">
+          <el-select v-model="data.topic_id" filterable placeholder="请选择话题" style="width: 400px;">
+            <el-option v-for="item in topicOption" :key="item.id" :label="item.title" :value="item.id" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" size="small" @click="dialogVisible=false">取 消</el-button>
@@ -143,11 +148,13 @@ import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData, batchDisable, getTypeOptions } from '@/api/article'
 import { getCategoryOptions } from '../../api/category'
 import { getToken } from '../../utils/auth'
+import { getTopicList } from '@/api/topic'
 
 const defaultData = {
   id: '',
   category_id: '',
   type: '',
+  topic_id: '',
   title: '',
   content: '',
   images: []
@@ -175,6 +182,7 @@ export default {
       ],
       categoryOptions: [],
       typeOptions: [],
+      topicOption: [],
       listQuery: {
         page: 1,
         limit: 10,
@@ -203,6 +211,7 @@ export default {
     this.getList()
     this.handleCategoryOptions()
     this.handleTypeOptions()
+    this.getTopic()
   },
   methods: {
     async getList() {
@@ -235,6 +244,16 @@ export default {
       const res = await getTypeOptions()
       if (res.code === 200) {
         this.typeOptions = res.data
+      }
+    },
+    async getTopic() {
+      const res = await getTopicList({
+        page: 1,
+        limit: 1000,
+        status: 2
+      })
+      if (res.code === 200) {
+        this.topicOption = res.data.data
       }
     },
     handleSelectionChange(obj) {

@@ -68,7 +68,7 @@
             {{ scope.row.created_at }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="状态" width="50">
+        <el-table-column align="center" label="状态" width="60">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.status == 1" type="success" size="mini">正常</el-tag>
             <el-tag v-else type="danger" size="mini">禁用</el-tag>
@@ -131,6 +131,11 @@
         <el-form-item label="VIP过期时间">
           <el-date-picker v-model="data.vip_end_time" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" />
         </el-form-item>
+        <el-form-item label="用户标签">
+          <el-select v-model="data.tags" filterable multiple placeholder="请选择" style="width: 400px;">
+            <el-option v-for="item in tagsOption" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" size="small" @click="dialogVisible=false">取 消</el-button>
@@ -143,6 +148,7 @@
 <script>
 import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/users'
+import { getUserTags } from '@/api/userTags'
 import { getToken } from '../../utils/auth'
 
 const defaultData = {
@@ -152,7 +158,8 @@ const defaultData = {
   phone: '',
   email: '',
   avatar: '',
-  vip_end_time: ''
+  vip_end_time: '',
+  tags: []
 }
 
 export default {
@@ -174,6 +181,7 @@ export default {
           label: '禁用'
         }
       ],
+      tagsOption: [],
       listQuery: {
         page: 1,
         limit: 10,
@@ -198,6 +206,7 @@ export default {
   },
   created() {
     this.getList()
+    this.getTags()
   },
   methods: {
     async getList() {
@@ -207,6 +216,14 @@ export default {
       this.total = res.data.total
       this.listQuery.page = res.data.current_page
       this.loading = false
+    },
+    async getTags() {
+      const res = await getUserTags({
+        page: 1,
+        limit: 100,
+        status: 2
+      })
+      this.tagsOption = res.data.data
     },
     async handleBatchDisable(status) {
       if (this.batch.selection.length <= 0) {
