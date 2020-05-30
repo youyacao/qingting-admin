@@ -31,7 +31,7 @@
             <span v-else-if="scope.row.type == 2">开通代理</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="分类名称" width="200">
+        <el-table-column align="center" label="商品名称" width="200">
           <template slot-scope="scope">
             {{ scope.row.name }}
           </template>
@@ -92,8 +92,8 @@
             <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="分类名称">
-          <el-input v-model="data.name" placeholder="分类名称" />
+        <el-form-item label="商品名称">
+          <el-input v-model="data.name" placeholder="商品名称" />
         </el-form-item>
         <el-form-item label="图标">
           <el-upload

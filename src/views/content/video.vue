@@ -137,6 +137,11 @@
         <el-form-item label="视频地址">
           <el-input v-model="data.video_url_full" placeholder="视频地址优先" />
         </el-form-item>
+        <el-form-item label="关联话题">
+          <el-select v-model="data.topic_id" filterable placeholder="请选择话题" style="width: 400px;">
+            <el-option v-for="item in topicOption" :key="item.id" :label="item.title" :value="item.id" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" size="small" @click="dialogVisible=false">取 消</el-button>
@@ -150,11 +155,13 @@
 import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/video'
 import { getCategoryOptions } from '../../api/category'
+import { getTopicList } from '../../api/topic'
 import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
   category_id: '',
+  topic_id: '',
   title: '',
   thumb: '',
   video_url: '',
@@ -182,6 +189,7 @@ export default {
         }
       ],
       categoryOptions: [],
+      topicOption: [],
       listQuery: {
         page: 1,
         limit: 10,
@@ -210,6 +218,7 @@ export default {
   created() {
     this.getList()
     this.handleCategoryOptions()
+    this.getTopic()
   },
   methods: {
     async getList() {
@@ -236,6 +245,16 @@ export default {
       const res = await getCategoryOptions()
       if (res.code === 200) {
         this.categoryOptions = res.data
+      }
+    },
+    async getTopic() {
+      const res = await getTopicList({
+        page: 1,
+        limit: 1000,
+        status: 2
+      })
+      if (res.code === 200) {
+        this.topicOption = res.data.data
       }
     },
     handleSelectionChange(obj) {
@@ -284,7 +303,7 @@ export default {
       })
         .then(async() => {
           await deleteData(row.id)
-          this.list.splice($index, 1)
+          this.getList()
           this.$message({
             type: 'success',
             message: '删除成功'
