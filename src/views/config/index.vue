@@ -181,6 +181,9 @@
           <el-form-item label="阿里云私钥">
             <el-input v-model="form.upload_aliyun_secretKey" />
           </el-form-item>
+          <el-form-item label="阿里云endPoint">
+            <el-input v-model="form.upload_aliyun_endPoint" />
+          </el-form-item>
           <el-form-item label="阿里云bucket">
             <el-input v-model="form.upload_aliyun_bucket" />
           </el-form-item>
@@ -319,6 +322,7 @@ export default {
         upload_service: '',
         upload_qiniu_accessKey: '',
         upload_qiniu_secretKey: '',
+        upload_aliyun_endPoint: '',
         upload_qiniu_bucket: '',
         upload_qiniu_domain: '',
         upload_qiniu_video_thumb: '',
