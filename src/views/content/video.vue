@@ -93,7 +93,10 @@
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑视频':'新增视频'">
       <el-form v-loading="loadingForm" :model="data" label-width="140px">
-        <el-form-item label="分类">
+        <el-form-item label="发布用户ID">
+          <el-input v-model="data.user_id" placeholder="发布用户ID" />
+        </el-form-item>
+        <el-form-item label="分类" style="width: 400px;">
           <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
         </el-form-item>
         <el-form-item label="标题">
@@ -131,7 +134,6 @@
             :before-upload="beforeVideoUpload"
           >
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传MP4文件，且不超过10M</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="视频地址">
@@ -154,12 +156,14 @@
 <script>
 import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/video'
+import { getUserList } from '@/api/users'
 import { getCategoryOptions } from '../../api/category'
 import { getTopicList } from '../../api/topic'
 import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
+  user_id: '',
   category_id: '',
   topic_id: '',
   title: '',
@@ -188,6 +192,8 @@ export default {
           label: '审核通过'
         }
       ],
+      userLoading: false,
+      userListOptions: [],
       categoryOptions: [],
       topicOption: [],
       listQuery: {
@@ -276,6 +282,8 @@ export default {
       this.getList()
     },
     handleCreate() {
+      this.imgUrl = '';
+      this.fileList = []
       this.data = Object.assign({}, defaultData)
       this.dialogType = 'new'
       this.dialogVisible = true
