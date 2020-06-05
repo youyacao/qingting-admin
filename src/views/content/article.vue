@@ -60,6 +60,11 @@
             <el-image v-if="scope.row.images_list[0]" style="width: 100px; height: 100px" :src="scope.row.images_list[0]" :preview-src-list="scope.row.images_list" />
           </template>
         </el-table-column>
+        <el-table-column align="center" label="视频链接" width="80">
+          <template slot-scope="scope">
+            <el-link v-if="scope.row.video_url" :href="scope.row.video_url2" target="_blank" type="primary">查看视频</el-link>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="创建时间" width="180">
           <template slot-scope="scope">
             {{ scope.row.created_at }}
@@ -98,6 +103,9 @@
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑图文':'新增图文'">
       <el-form v-loading="loadingForm" :model="data" label-width="140px">
+        <el-form-item label="发布用户ID">
+          <el-input v-model="data.user_id" placeholder="发布用户ID" />
+        </el-form-item>
         <el-form-item label="分类">
           <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
         </el-form-item>
@@ -126,7 +134,22 @@
             :before-upload="beforeUpload"
           >
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg|jpeg|png|gif文件，且不超过2M</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="视频">
+          <el-upload
+            ref="uploadVideo"
+            class="upload-demo"
+            :action="upVideoAction"
+            :headers="upHeaders"
+            :on-remove="handleVideoRemove"
+            :file-list="fileVideoList"
+            list-type="picture"
+            :limit="1"
+            :on-success="handleVideoSuccess"
+            :before-upload="beforeVideoUpload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </el-form-item>
         <el-form-item label="关联话题">
@@ -152,12 +175,15 @@ import { getTopicList } from '@/api/topic'
 
 const defaultData = {
   id: '',
+  user_id: '',
   category_id: '',
   type: '',
   topic_id: '',
   title: '',
   content: '',
-  images: []
+  images: [],
+  thumb: '',
+  video_url: ''
 }
 
 export default {
@@ -197,8 +223,10 @@ export default {
       },
       data: Object.assign({}, defaultData),
       fileList: [],
+      fileVideoList: [],
       images: [],
       upAction: process.env.VUE_APP_BASE_API + '/upload',
+      upVideoAction: process.env.VUE_APP_BASE_API + '/uploadVideo',
       upHeaders: {
         Authorization: getToken()
       },
@@ -275,6 +303,8 @@ export default {
       this.getList()
     },
     handleCreate() {
+      this.fileList = []
+      this.fileVideoList = []
       this.data = Object.assign({}, defaultData)
       this.dialogType = 'new'
       this.dialogVisible = true
@@ -291,6 +321,13 @@ export default {
           name: '图片' + key,
           img_url: this.data.images[key],
           url: this.data.images_list[key]
+        })
+      }
+      this.fileVideoList = []
+      if (this.data.thumb2) {
+        this.fileVideoList.push({
+          name: '视频',
+          url: this.data.thumb2
         })
       }
       this.$nextTick(() => {
@@ -368,6 +405,30 @@ export default {
           message: res.msg
         })
       }
+    },
+    beforeVideoUpload(file) {
+      return true
+    },
+    handleVideoRemove(file, fileList) {
+      this.fileVideoList = []
+      this.data.thumb = ''
+      this.data.video_url = ''
+    },
+    handleVideoSuccess(res, file) {
+      if (res.code === 200) {
+        this.data.thumb = res.data.img
+        this.data.video_url = res.data.video_url
+        this.fileVideoList.push({
+          name: res.data.name,
+          url: res.data.img_url
+        })
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+      }
+      this.$refs['uploadVideo'].clearFiles()
     }
   }
 }
