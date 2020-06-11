@@ -57,6 +57,9 @@
           <el-form-item label="免费试看时长">
             <el-input v-model="form.base_video_free_duration" placeholder="0代表不限制时长（需开启登陆）" />
           </el-form-item>
+          <el-form-item label="观看几个视频出现广告">
+            <el-input v-model="form.base_video_num_showad" placeholder="0代表不出现" />
+          </el-form-item>
           <el-divider content-position="left">直播配置</el-divider>
           <el-form-item label="观看直播是否要登陆">
             <el-switch v-model="form.base_live_need_login" active-color="#13ce66" inactive-color="#ff4949" />
@@ -348,9 +351,11 @@ export default {
   },
   methods: {
     async getConfig() {
-      const res = await getData()
-      this.form = deepClone(res.data)
-      this.avatar_url = res.data.base_default_avatar_url
+      if (this.$store.getters.username != 'demo') {
+        const res = await getData()
+        this.form = deepClone(res.data)
+        this.avatar_url = res.data.base_default_avatar_url
+      }
     },
     async onSubmit() {
       if (this.loading) {
