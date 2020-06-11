@@ -190,6 +190,29 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/live',
+    component: Layout,
+    redirect: '/live',
+    alwaysShow: true, // will always show the root menu
+    name: 'content',
+    meta: {
+      title: '直播管理',
+      icon: 'international',
+      roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'live',
+        //component: () => import('@/views/content/topic'),
+        name: 'Live',
+        meta: {
+          title: '直播列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      }
+    ]
+  },
+  {
     path: '/shop',
     component: Layout,
     redirect: '/shop/vip',
