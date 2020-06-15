@@ -60,8 +60,11 @@
           <el-form-item label="免费试看时长">
             <el-input v-model="form.base_video_free_duration" placeholder="0代表不限制时长（需开启登陆）" />
           </el-form-item>
-          <el-form-item label="观看几个视频出现广告">
-            <el-input v-model="form.base_video_num_showad" placeholder="0代表不出现" />
+          <el-form-item label="预览视频开始秒数（S）">
+            <el-input v-model="form.base_video_start_second" placeholder="开始秒数" />
+          </el-form-item>
+          <el-form-item label="预览视频结束秒数（S）">
+            <el-input v-model="form.base_video_end_second" placeholder="结束秒数" />
           </el-form-item>
           <el-divider content-position="left">直播配置</el-divider>
           <el-form-item label="观看直播是否要登陆">
@@ -300,7 +303,10 @@ export default {
         base_video_need_login: false,
         base_video_show_ad: '',
         base_video_free_time: '',
+        base_video_free_num: '',
         base_video_free_duration: '',
+        base_video_start_second: '',
+        base_video_end_second: '',
         base_video_open_check: false,
         base_live_need_login: false,
         base_live_free_time: '',
