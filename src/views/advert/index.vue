@@ -120,7 +120,7 @@
           <el-input v-model="data.provider_name" placeholder="推广商名称" />
         </el-form-item>
         <el-form-item label="标题">
-          <el-input v-model="data.provider_name" placeholder="推广商名称" />
+          <el-input v-model="data.title" placeholder="推广商名称" />
         </el-form-item>
         <el-form-item label="广告图片">
           <el-upload
