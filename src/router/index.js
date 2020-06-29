@@ -225,6 +225,15 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'goods',
+        component: () => import('@/views/shop/goods'),
+        name: 'Goods',
+        meta: {
+          title: '商品列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      },
+      {
         path: 'vip',
         component: () => import('@/views/shop/vip'),
         name: 'Vip',
