@@ -18,7 +18,7 @@
           </el-button>
         </div>
       </el-form>
-      <el-table ref="multipleTable" v-loading="loading" tooltip-effect="dark" :data="list" style="width: 100%;" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" stripe @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" v-loading="loading" tooltip-effect="dark" :data="list" style="width: 100%;" row-key="id" stripe @selection-change="handleSelectionChange">
         <el-table-column align="left" type="selection" width="50" />
         <el-table-column align="left" label="ID" width="60">
           <template slot-scope="scope">

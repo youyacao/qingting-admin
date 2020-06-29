@@ -157,6 +157,12 @@
             <el-option v-for="item in topicOption" :key="item.id" :label="item.title" :value="item.id" />
           </el-select>
         </el-form-item>
+        <el-form-item label="浏览量">
+          <el-input v-model="data.view_num" placeholder="浏览量" />
+        </el-form-item>
+        <el-form-item label="点赞数">
+          <el-input v-model="data.like_num" placeholder="点赞数" />
+        </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" size="small" @click="dialogVisible=false">取 消</el-button>
@@ -183,7 +189,9 @@ const defaultData = {
   content: '',
   images: [],
   thumb: '',
-  video_url: ''
+  video_url: '',
+  view_num: '',
+  like_num: ''
 }
 
 export default {
