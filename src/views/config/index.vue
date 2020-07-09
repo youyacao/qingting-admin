@@ -183,6 +183,9 @@
           <el-form-item label="七牛云视频截图">
             <el-input v-model="form.upload_qiniu_video_thumb" />
           </el-form-item>
+          <el-form-item label="七牛云视频切片">
+            <el-input v-model="form.upload_qiniu_video_segment" />
+          </el-form-item>
           <el-divider content-position="left">阿里云配置</el-divider>
           <el-form-item label="阿里云公钥">
             <el-input v-model="form.upload_aliyun_accessKey" />
@@ -339,6 +342,7 @@ export default {
         upload_qiniu_bucket: '',
         upload_qiniu_domain: '',
         upload_qiniu_video_thumb: '',
+        upload_qiniu_video_segment: '',
         upload_aliyun_accessKey: '',
         upload_aliyun_secretKey: '',
         upload_aliyun_bucket: '',
