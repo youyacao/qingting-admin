@@ -139,6 +139,9 @@
         <el-form-item label="视频地址">
           <el-input v-model="data.video_url_full" placeholder="视频地址优先" />
         </el-form-item>
+        <el-form-item label="短视频地址">
+          <el-input v-model="data.short_video_url" placeholder="短视频地址" />
+        </el-form-item>
         <el-form-item label="关联话题">
           <el-select v-model="data.topic_id" filterable placeholder="请选择话题" style="width: 400px;">
             <el-option v-for="item in topicOption" :key="item.id" :label="item.title" :value="item.id" />
@@ -162,7 +165,6 @@
 <script>
 import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/video'
-import { getUserList } from '@/api/users'
 import { getCategoryOptions } from '../../api/category'
 import { getTopicList } from '../../api/topic'
 import { getToken } from '../../utils/auth'
@@ -175,6 +177,7 @@ const defaultData = {
   title: '',
   thumb: '',
   video_url: '',
+  short_video_url: '',
   video_thumb_url: '',
   view_num: '',
   like_num: ''
@@ -290,7 +293,7 @@ export default {
       this.getList()
     },
     handleCreate() {
-      this.imgUrl = '';
+      this.imgUrl = ''
       this.fileList = []
       this.data = Object.assign({}, defaultData)
       this.dialogType = 'new'
