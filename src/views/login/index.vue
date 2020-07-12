@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">蜻蜓系统X3.0-后台管理</h3>
+        <h3 class="title">蜻蜓系统X3.2-后台管理</h3>
       </div>
 
       <el-form-item prop="username">
@@ -48,6 +48,11 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 陆</el-button>
 
     </el-form>
+
+    <div class="title-container">
+      <h5 class="title" @click="tooff()">成都市一颗优雅草科技有限公司</h5>
+    </div>
+
   </div>
 </template>
 
@@ -147,6 +152,10 @@ export default {
         }
       })
     },
+    tooff() {
+      this.$router.push({ path: 'https://songshu.youyacao.com/' })
+    },
+
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
         if (cur !== 'redirect') {

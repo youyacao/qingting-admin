@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '蜻蜓系统X3.0',
+      title: '蜻蜓系统X3.2',
       logo: require('../../../assets/logo.png')
     }
   }
