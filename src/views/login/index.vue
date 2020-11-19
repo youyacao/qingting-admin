@@ -3,7 +3,8 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">蜻蜓系统X3.0-后台管理</h3>
+        <h3 class="title">蜻蜓系统X3.4-后台管理</h3>
+
       </div>
 
       <el-form-item prop="username">
@@ -47,6 +48,10 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 陆</el-button>
 
+<div class="copyright"> <span @click="gw()">成都市一颗优雅草科技有限公司</span></br>
+
+<span @click="qtapi()">技术文档</span> |<span @click="ssgw()">官网介绍</span>
+</div>
     </el-form>
   </div>
 </template>
@@ -129,6 +134,15 @@ export default {
         this.$refs.password.focus()
       })
     },
+    gw(){
+       window.location.href = "https://www.youyacao.com"
+    },
+qtapi(){
+       window.location.href = "https://doc.youyacao.com/web/#/16?page_id=93"
+    },
+    ssgw(){
+       window.location.href = "https://songshu.youyacao.com"
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -208,6 +222,12 @@ $bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
 
+.copyright{
+  color: white;
+text-align: center;
+ cursor: pointer;
+ font-size: 14px;
+}
 .login-container {
   min-height: 100%;
   width: 100%;
