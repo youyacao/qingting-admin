@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">视频列表</div>
+      <div slot="header">影视列表</div>
       <el-form :inline="true">
         <div class="filter-container">
           <el-cascader v-model="listQuery.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
@@ -37,6 +37,11 @@
             {{ scope.row.category_name }}
           </template>
         </el-table-column>
+        <el-table-column align="center" label="类别" width="100">
+          <template slot-scope="scope">
+            {{ typeOptions[scope.row.type] }}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="标题">
           <template slot-scope="scope">
             {{ scope.row.title }}
@@ -48,11 +53,6 @@
               <img :src="scope.row.thumb2" style="max-height: 200px">
               <img slot="reference" :src="scope.row.thumb2" :alt="scope.row.thumb2" style="max-height: 80px; max-width: 80px">
             </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="视频链接" width="80">
-          <template slot-scope="scope">
-            <el-link :href="scope.row.video_url2" target="_blank" type="primary">查看视频</el-link>
           </template>
         </el-table-column>
         <el-table-column align="center" label="发布时间" width="100">
@@ -91,7 +91,7 @@
         @size-change="handleSizeChange"
       />
     </el-card>
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑视频':'新增视频'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑影视':'新增影视'" width="80%">
       <el-form v-loading="loadingForm" :model="data" label-width="140px">
         <el-form-item label="发布用户ID">
           <el-input v-model="data.user_id" placeholder="发布用户ID" />
@@ -99,8 +99,21 @@
         <el-form-item label="分类" style="width: 400px;">
           <el-cascader v-model="data.category_id" :options="categoryOptions" :props="{ checkStrictly: true, emitPath: false, label:'name', value:'id'}" style="float:left;" clearable placeholder="请选择分类" />
         </el-form-item>
+        <el-form-item label="类别" style="width: 400px;">
+          <el-select v-model="data.type" placeholder="请选择">
+            <el-option
+              v-for="(item, index) in typeOptions"
+              :key="item"
+              :label="item"
+              :value="index"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="标题">
           <el-input v-model="data.title" placeholder="标题" />
+        </el-form-item>
+        <el-form-item label="副标题">
+          <el-input v-model="data.subtitle" placeholder="副标题" />
         </el-form-item>
         <el-form-item label="预览图">
           <el-upload
@@ -120,33 +133,6 @@
         <el-form-item label="预览图地址">
           <el-input v-model="data.thumb_url_full" placeholder="预览图地址优先" />
         </el-form-item>
-        <el-form-item label="视频">
-          <el-upload
-            ref="uploadVideo"
-            class="upload-demo"
-            :action="upVideoAction"
-            :headers="upHeaders"
-            :on-remove="handleVideoRemove"
-            :file-list="fileList"
-            list-type="picture"
-            :limit="1"
-            :on-success="handleVideoSuccess"
-            :before-upload="beforeVideoUpload"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="视频地址">
-          <el-input v-model="data.video_url_full" placeholder="视频地址优先" />
-        </el-form-item>
-        <el-form-item label="短视频地址">
-          <el-input v-model="data.short_video_url" placeholder="短视频地址" />
-        </el-form-item>
-        <el-form-item label="关联话题">
-          <el-select v-model="data.topic_id" filterable placeholder="请选择话题" style="width: 400px;">
-            <el-option v-for="item in topicOption" :key="item.id" :label="item.title" :value="item.id" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="浏览量">
           <el-input v-model="data.view_num" placeholder="浏览量" />
         </el-form-item>
@@ -164,21 +150,26 @@
 
 <script>
 import { deepClone } from '@/utils'
-import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/video'
-import { getCategoryOptions } from '../../api/category'
-import { getTopicList } from '../../api/topic'
+import { getDatas, addData, deleteData, updateData, batchDisable, getTypeOptions } from '@/api/movie'
+import { getCategoryOptions } from '../../api/movieCategory'
 import { getToken } from '../../utils/auth'
 
 const defaultData = {
   id: '',
   user_id: '',
   category_id: '',
-  topic_id: '',
+  type: '',
   title: '',
+  subtitle: '',
   thumb: '',
-  video_url: '',
-  short_video_url: '',
-  video_thumb_url: '',
+  url: '',
+  thumb_url: '',
+  intro: '',
+  duration: '',
+  score: '',
+  releasee_date: '',
+  release_address: '',
+  tags: '',
   view_num: '',
   like_num: ''
 }
@@ -203,8 +194,8 @@ export default {
           label: '审核通过'
         }
       ],
+      typeOptions: {},
       categoryOptions: [],
-      topicOption: [],
       listQuery: {
         page: 1,
         limit: 10,
@@ -220,7 +211,6 @@ export default {
       imgUrl: '',
       fileList: [],
       upAction: process.env.VUE_APP_BASE_API + '/upload',
-      upVideoAction: process.env.VUE_APP_BASE_API + '/uploadVideo',
       upHeaders: {
         Authorization: getToken()
       },
@@ -233,7 +223,7 @@ export default {
   created() {
     this.getList()
     this.handleCategoryOptions()
-    this.getTopic()
+    this.handleTypeOptions()
   },
   methods: {
     async getList() {
@@ -262,14 +252,10 @@ export default {
         this.categoryOptions = res.data
       }
     },
-    async getTopic() {
-      const res = await getTopicList({
-        page: 1,
-        limit: 1000,
-        status: 2
-      })
+    async handleTypeOptions() {
+      const res = await getTypeOptions()
       if (res.code === 200) {
-        this.topicOption = res.data.data
+        this.typeOptions = res.data
       }
     },
     handleSelectionChange(obj) {
@@ -303,11 +289,6 @@ export default {
       this.checkStrictly = true
       this.data = deepClone(scope.row)
       this.imgUrl = this.data.thumb2
-      this.fileList = []
-      this.fileList.push({
-        name: '视频',
-        url: this.data.thumb2
-      })
       this.$nextTick(() => {
         this.checkStrictly = false
       })
@@ -341,7 +322,6 @@ export default {
         type: 'success',
         message: '保存成功'
       })
-      this.$refs['uploadVideo'].clearFiles()
     },
     handleSuccess(res, file) {
       if (res.code === 200) {
@@ -359,29 +339,6 @@ export default {
     beforeUpload(file) {
       this.loadingForm = true
       return true
-    },
-    beforeVideoUpload(file) {
-      return true
-    },
-    handleVideoRemove(file, fileList) {
-      this.fileList = []
-      this.data.video_url = ''
-    },
-    handleVideoSuccess(res, file) {
-      if (res.code === 200) {
-        this.data.video_url = res.data.video_url
-        this.data.video_thumb_url = res.data.img
-        this.fileList.push({
-          name: res.data.name,
-          url: res.data.img_url
-        })
-      } else {
-        this.$message({
-          type: 'error',
-          message: res.msg
-        })
-      }
-      this.$refs['uploadVideo'].clearFiles()
     }
   }
 }

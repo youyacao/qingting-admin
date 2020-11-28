@@ -190,6 +190,39 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/movie',
+    component: Layout,
+    redirect: '/movie',
+    alwaysShow: true, // will always show the root menu
+    name: 'movie',
+    meta: {
+      title: '影视管理',
+      icon: 'tree',
+      roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/movie/list'),
+        name: 'list',
+        meta: {
+          title: '影视列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      },
+      {
+        path: 'category',
+        component: () => import('@/views/movie/category'),
+        name: 'Category',
+        meta: {
+          title: '分类列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      }
+    ]
+  },
+  /*
+  {
     path: '/live',
     component: Layout,
     redirect: '/live',
@@ -211,7 +244,7 @@ export const asyncRoutes = [
         }
       }
     ]
-  },
+  },*/
   {
     path: '/shop',
     component: Layout,
