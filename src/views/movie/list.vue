@@ -68,8 +68,9 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleEdit(scope)">编辑</el-button>
-            <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleDelete(scope)">删除</el-button>
+            <el-button type="text" size="mini" @click="handleDetail(scope)">管理视频</el-button>
+            <el-button type="text" size="mini" @click="handleEdit(scope)">编辑</el-button>
+            <el-button type="text" size="mini" @click="handleDelete(scope)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -145,6 +146,25 @@
         <el-button type="primary" size="small" @click="confirmData">确 认</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="视频管理" :visible.sync="dialogTableVisible" width="80%">
+      <el-table :data="detailList" width="">
+        <el-table-column property="id" label="ID" width="80" />
+        <el-table-column property="sort" label="排序（越小越靠前）" width="300" />
+        <el-table-column property="title" label="标题" />
+        <el-table-column align="center" label="视频链接" width="200">
+          <template slot-scope="scope">
+            <el-link v-if="scope.row.url2" :href="scope.row.url2" target="_blank" type="primary">查看视频</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作" width="200">
+          <template slot-scope="scope">
+            <el-button type="text" size="mini" @click="handleEdit(scope)">编辑</el-button>
+            <el-button type="text" size="mini" @click="handleDelete(scope)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -217,7 +237,10 @@ export default {
       data: Object.assign({}, defaultData),
       dialogVisible: false,
       dialogType: 'new',
-      checkStrictly: false
+      checkStrictly: false,
+      detailData: {},
+      detailList: [],
+      dialogTableVisible: false
     }
   },
   created() {
@@ -339,6 +362,11 @@ export default {
     beforeUpload(file) {
       this.loadingForm = true
       return true
+    },
+    handleDetail(row) {
+      const that = this
+      that.detailData = row
+      that.dialogTableVisible = true
     }
   }
 }

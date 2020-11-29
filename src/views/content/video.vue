@@ -52,7 +52,7 @@
         </el-table-column>
         <el-table-column align="center" label="视频链接" width="80">
           <template slot-scope="scope">
-            <el-link :href="scope.row.video_url2" target="_blank" type="primary">查看视频</el-link>
+            <el-link v-if="scope.row.video_url2" :href="scope.row.video_url2" target="_blank" type="primary">查看视频</el-link>
           </template>
         </el-table-column>
         <el-table-column align="center" label="发布时间" width="100">
