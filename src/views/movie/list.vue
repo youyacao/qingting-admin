@@ -134,6 +134,24 @@
         <el-form-item label="预览图地址">
           <el-input v-model="data.thumb_url_full" placeholder="预览图地址优先" />
         </el-form-item>
+        <el-form-item label="影视介绍">
+          <el-input v-model="data.intro" type="textarea" placeholder="影视介绍" />
+        </el-form-item>
+        <el-form-item label="时长">
+          <el-input v-model="data.duration" placeholder="时长" />
+        </el-form-item>
+        <el-form-item label="评分">
+          <el-input v-model="data.score" placeholder="评分" />
+        </el-form-item>
+        <el-form-item label="上映时间">
+          <el-input v-model="data.release_date" placeholder="上映时间" />
+        </el-form-item>
+        <el-form-item label="上映地点">
+          <el-input v-model="data.release_address" placeholder="上映地点" />
+        </el-form-item>
+        <el-form-item label="标签">
+          <el-input v-model="data.tags" placeholder="标签" />
+        </el-form-item>
         <el-form-item label="浏览量">
           <el-input v-model="data.view_num" placeholder="浏览量" />
         </el-form-item>
@@ -148,10 +166,25 @@
     </el-dialog>
 
     <el-dialog title="视频管理" :visible.sync="dialogTableVisible" width="80%">
-      <el-table :data="detailList" width="">
-        <el-table-column property="id" label="ID" width="80" />
-        <el-table-column property="sort" label="排序（越小越靠前）" width="300" />
-        <el-table-column property="title" label="标题" />
+      <el-button class="filter-item" style="margin-left: 0px;" type="success" icon="el-icon-edit" @click="handleDetailCreate">
+        新增
+      </el-button>
+      <el-table v-loading="loadingDetail" :data="detailList" width="100%">
+        <el-table-column prop="id" label="ID" width="80">
+          <template slot-scope="scope">
+            {{ scope.row.id }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="sort" label="排序（越小越靠前）" width="300">
+          <template slot-scope="scope">
+            {{ scope.row.sort }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" label="标题">
+          <template slot-scope="scope">
+            {{ scope.row.title }}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="视频链接" width="200">
           <template slot-scope="scope">
             <el-link v-if="scope.row.url2" :href="scope.row.url2" target="_blank" type="primary">查看视频</el-link>
@@ -159,11 +192,48 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="handleEdit(scope)">编辑</el-button>
-            <el-button type="text" size="mini" @click="handleDelete(scope)">删除</el-button>
+            <el-button type="text" size="mini" @click="handleDetailEdit(scope)">编辑</el-button>
+            <el-button type="text" size="mini" @click="handleDetailDelete(scope)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+    </el-dialog>
+
+    <el-dialog :visible.sync="dialogDetailVisible" :title="dialogType==='edit'?'编辑':'新增'" width="60%">
+      <el-form v-loading="loadingDetailForm" :model="detailListData" label-width="140px">
+        <el-form-item label="标题">
+          <el-input v-model="detailListData.title" placeholder="标题" />
+        </el-form-item>
+        <el-form-item label="标题">
+          <el-input v-model="detailListData.sort" placeholder="排序" />
+        </el-form-item>
+        <el-form-item label="视频">
+          <el-upload
+            ref="uploadVideo"
+            class="upload-demo"
+            :action="upVideoAction"
+            :headers="upHeaders"
+            :on-remove="handleVideoRemove"
+            :file-list="fileList"
+            list-type="picture"
+            :limit="1"
+            :on-success="handleVideoSuccess"
+            :before-upload="beforeVideoUpload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="视频地址">
+          <el-input v-model="detailListData.url" placeholder="视频地址优先" />
+        </el-form-item>
+        <el-form-item label="介绍">
+          <el-input v-model="detailListData.intro" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <div style="text-align:right;">
+        <el-button type="danger" size="small" @click="dialogDetailVisible=false">取 消</el-button>
+        <el-button type="primary" size="small" @click="confirmDetailData">确 认</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -171,6 +241,7 @@
 <script>
 import { deepClone } from '@/utils'
 import { getDatas, addData, deleteData, updateData, batchDisable, getTypeOptions } from '@/api/movie'
+import { getDetailDatas, addDetailData, deleteDetailData, updateDetailData } from '@/api/movieDetail'
 import { getCategoryOptions } from '../../api/movieCategory'
 import { getToken } from '../../utils/auth'
 
@@ -198,7 +269,9 @@ export default {
   data() {
     return {
       loading: false,
+      loadingDetail: false,
       loadingForm: false,
+      loadingDetailForm: false,
       list: [],
       total: 0,
       statusOptions: [
@@ -224,13 +297,24 @@ export default {
         category_id: '',
         status: ''
       },
+      listDetailQuery: {
+        page: 1,
+        limit: 10,
+        movie_id: '',
+        status: ''
+      },
       batch: {
+        selection: [],
+        status: 1
+      },
+      batchDetail: {
         selection: [],
         status: 1
       },
       imgUrl: '',
       fileList: [],
       upAction: process.env.VUE_APP_BASE_API + '/upload',
+      upVideoAction: process.env.VUE_APP_BASE_API + '/uploadVideo',
       upHeaders: {
         Authorization: getToken()
       },
@@ -240,7 +324,9 @@ export default {
       checkStrictly: false,
       detailData: {},
       detailList: [],
-      dialogTableVisible: false
+      detailListData: {},
+      dialogTableVisible: false,
+      dialogDetailVisible: false
     }
   },
   created() {
@@ -365,8 +451,87 @@ export default {
     },
     handleDetail(row) {
       const that = this
-      that.detailData = row
+      that.detailData = row.row
+      that.getDetailList()
       that.dialogTableVisible = true
+    },
+    async getDetailList() {
+      this.loadingDetail = true
+      this.listDetailQuery.movie_id = this.detailData.id
+      const res = await getDetailDatas(this.listDetailQuery)
+      this.detailList = res.data
+      this.listDetailQuery.page = res.data.current_page
+      this.loadingDetail = false
+    },
+    handleDetailCreate() {
+      this.detailListData = {}
+      this.fileList = []
+      this.dialogType = 'new'
+      this.dialogDetailVisible = true
+    },
+    handleDetailEdit(scope) {
+      this.dialogType = 'edit'
+      this.dialogDetailVisible = true
+      this.checkStrictly = true
+      this.detailListData = deepClone(scope.row)
+      this.imgUrl = this.data.thumb2
+      this.$nextTick(() => {
+        this.checkStrictly = false
+      })
+    },
+    handleDetailDelete({ $index, row }) {
+      this.$confirm('确定删除该条数据?', '警告', {
+        confirmButtonText: '确 定',
+        cancelButtonText: '取 消',
+        type: 'warning'
+      })
+        .then(async() => {
+          await deleteDetailData(row.id)
+          this.getDetailList()
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+        })
+        .catch(err => { console.error(err) })
+    },
+    async confirmDetailData() {
+      const isEdit = this.dialogType === 'edit'
+      this.detailListData.movie_id = this.detailData.id
+      if (isEdit) {
+        await updateDetailData(this.detailListData.id, this.detailListData)
+      } else {
+        await addDetailData(this.detailListData)
+      }
+      this.getDetailList()
+      this.dialogDetailVisible = false
+      this.$message({
+        type: 'success',
+        message: '保存成功'
+      })
+    },
+    beforeVideoUpload(file) {
+      return true
+    },
+    handleVideoRemove(file, fileList) {
+      this.fileList = []
+      this.detailListData.url = ''
+    },
+    handleVideoSuccess(res, file) {
+      if (res.code === 200) {
+        this.detailListData.url = res.data.video_url
+        this.detailListData.thumb = res.data.img
+        this.fileList.push({
+          name: res.data.name,
+          url: res.data.img_url
+        })
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+      }
+      this.$refs['uploadVideo'].clearFiles()
     }
   }
 }
