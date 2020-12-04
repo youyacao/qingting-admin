@@ -68,6 +68,12 @@
             {{ scope.row.created_at }}
           </template>
         </el-table-column>
+        <el-table-column align="center" label="是否可直播" width="100">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.can_live == 1" type="success" size="mini">是</el-tag>
+            <el-tag v-else type="danger" size="mini">否</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="状态" width="60">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.status == 1" type="success" size="mini">正常</el-tag>
