@@ -221,13 +221,12 @@ export const asyncRoutes = [
       }
     ]
   },
-  /*
   {
     path: '/live',
     component: Layout,
     redirect: '/live',
     alwaysShow: true, // will always show the root menu
-    name: 'content',
+    name: 'live',
     meta: {
       title: '直播管理',
       icon: 'international',
@@ -235,16 +234,25 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'live',
-        //component: () => import('@/views/content/topic'),
-        name: 'Live',
+        path: 'index',
+        component: () => import('@/views/live/index'),
+        name: 'Index',
+        meta: {
+          title: '直播列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      },
+      {
+        path: 'history',
+        component: () => import('@/views/live/history'),
+        name: 'History',
         meta: {
           title: '直播列表',
           roles: ['admin', 'editor', 'guest']
         }
       }
     ]
-  },*/
+  },
   {
     path: '/shop',
     component: Layout,
