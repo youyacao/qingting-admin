@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">历史直播</div>
+      <div slot="header">直播历史</div>
       <el-table ref="multipleTable" v-loading="loading" tooltip-effect="dark" :data="list" style="width: 100%;" stripe>
         <el-table-column align="left" label="ID" width="80">
           <template slot-scope="scope">
@@ -20,23 +20,17 @@
             {{ scope.row.title }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="预览图" width="80">
+        <el-table-column align="center" label="预览图" width="200">
           <template slot-scope="scope">
             <el-popover placement="right" title="" trigger="hover">
-              <img :src="scope.row.thumb2" style="max-height: 200px">
-              <img slot="reference" :src="scope.row.thumb2" :alt="scope.row.thumb2" style="max-height: 80px; max-width: 80px">
+              <img :src="scope.row.thumb" style="max-height: 200px">
+              <img slot="reference" :src="scope.row.thumb" :alt="scope.row.thumb" style="max-height: 80px; max-width: 80px">
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="开播时间" width="100">
+        <el-table-column align="center" label="开播时间" width="200">
           <template slot-scope="scope">
             {{ scope.row.updated_at }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="状态" width="70">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.live_status == 1" type="success" size="mini">正在直播</el-tag>
-            <el-tag v-else-if="scope.row.live_status == 1" type="warning" size="mini">已关播</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -56,46 +50,46 @@
 </template>
 
 <script>
-  import { getDatasHistory } from '@/api/live'
+import { getDatasHistory } from '@/api/live'
 
-  export default {
-    data() {
-      return {
-        loading: false,
-        list: [],
-        total: 0,
-        listQuery: {
-          page: 1,
-          limit: 10
-        }
-      }
-    },
-    created() {
-      this.getList()
-    },
-    methods: {
-      async getList() {
-        this.loading = true
-        const res = await getDatasHistory(this.listQuery)
-        this.list = res.data.data
-        this.total = res.data.total
-        this.listQuery.page = res.data.current_page
-        this.loading = false
-      },
-      handleFilter() {
-        this.listQuery.page = 1
-        this.getList()
-      },
-      handleSizeChange(val) {
-        this.listQuery.limit = val
-        this.getList()
-      },
-      handleCurrentChange(val) {
-        this.listQuery.page = val
-        this.getList()
+export default {
+  data() {
+    return {
+      loading: false,
+      list: [],
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 10
       }
     }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    async getList() {
+      this.loading = true
+      const res = await getDatasHistory(this.listQuery)
+      this.list = res.data.data
+      this.total = res.data.total
+      this.listQuery.page = res.data.current_page
+      this.loading = false
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      this.getList()
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>

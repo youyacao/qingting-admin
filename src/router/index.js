@@ -247,7 +247,7 @@ export const asyncRoutes = [
         component: () => import('@/views/live/history'),
         name: 'History',
         meta: {
-          title: '直播列表',
+          title: '直播历史',
           roles: ['admin', 'editor', 'guest']
         }
       }

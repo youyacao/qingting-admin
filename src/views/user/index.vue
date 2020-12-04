@@ -143,8 +143,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否可直播">
-          <el-select v-model="data.can_live" filterable multiple placeholder="请选择" style="width: 400px;">
-            <el-option v-for="item in canLiveOption" :key="item.id" :label="item.name" :value="item.id" />
+          <el-select v-model="data.can_live" placeholder="请选择" style="width: 400px;">
+            <el-option v-for="item in canLiveOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -171,7 +171,7 @@ const defaultData = {
   avatar: '',
   vip_end_time: '',
   tags: [],
-  can_live: '0'
+  can_live: ''
 }
 
 export default {
@@ -195,11 +195,11 @@ export default {
       ],
       canLiveOption: [
         {
-          value: '0',
+          value: 0,
           label: '否'
         },
         {
-          value: '1',
+          value: 1,
           label: '是'
         }
       ],
