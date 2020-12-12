@@ -110,6 +110,26 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item label="地区" style="width: 400px;">
+          <el-select v-model="data.region" placeholder="请选择">
+            <el-option
+              v-for="(item, index) in regionOptions"
+              :key="item"
+              :label="item"
+              :value="index"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="年份" style="width: 400px;">
+          <el-select v-model="data.year" placeholder="请选择">
+            <el-option
+              v-for="(item) in yearOptions"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="标题">
           <el-input v-model="data.title" placeholder="标题" />
         </el-form-item>
@@ -175,7 +195,7 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column prop="sort" label="排序（越小越靠前）" width="300">
+        <el-table-column prop="sort" label="当前集" width="300">
           <template slot-scope="scope">
             {{ scope.row.sort }}
           </template>
@@ -204,8 +224,8 @@
         <el-form-item label="标题">
           <el-input v-model="detailListData.title" placeholder="标题" />
         </el-form-item>
-        <el-form-item label="标题">
-          <el-input v-model="detailListData.sort" placeholder="排序" />
+        <el-form-item label="当前集">
+          <el-input v-model="detailListData.sort" placeholder="当前集（排序，越小越靠前，1开始）" />
         </el-form-item>
         <el-form-item label="视频">
           <el-upload
@@ -250,6 +270,8 @@ const defaultData = {
   user_id: '',
   category_id: '',
   type: '',
+  region: '',
+  year: '',
   title: '',
   subtitle: '',
   thumb: '',
@@ -288,6 +310,8 @@ export default {
         }
       ],
       typeOptions: {},
+      regionOptions: {},
+      yearOptions: {},
       categoryOptions: [],
       listQuery: {
         page: 1,
@@ -364,7 +388,9 @@ export default {
     async handleTypeOptions() {
       const res = await getTypeOptions()
       if (res.code === 200) {
-        this.typeOptions = res.data
+        this.typeOptions = res.data.type_list
+        this.regionOptions = res.data.region_list
+        this.yearOptions = res.data.year_list
       }
     },
     handleSelectionChange(obj) {
