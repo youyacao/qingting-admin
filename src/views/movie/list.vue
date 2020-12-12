@@ -39,7 +39,7 @@
         </el-table-column>
         <el-table-column align="center" label="类别" width="100">
           <template slot-scope="scope">
-            {{ typeOptions[scope.row.type] }}
+            {{ typeOptions[scope.row.type].value }}
           </template>
         </el-table-column>
         <el-table-column align="center" label="标题">
@@ -103,20 +103,20 @@
         <el-form-item label="类别" style="width: 400px;">
           <el-select v-model="data.type" placeholder="请选择">
             <el-option
-              v-for="(item, index) in typeOptions"
-              :key="item"
-              :label="item"
-              :value="index"
+              v-for="(item) in typeOptions"
+              :key="item.value"
+              :label="item.value"
+              :value="item.key"
             />
           </el-select>
         </el-form-item>
         <el-form-item label="地区" style="width: 400px;">
           <el-select v-model="data.region" placeholder="请选择">
             <el-option
-              v-for="(item, index) in regionOptions"
-              :key="item"
-              :label="item"
-              :value="index"
+              v-for="(item) in regionOptions"
+              :key="item.value"
+              :label="item.value"
+              :value="item.key"
             />
           </el-select>
         </el-form-item>
@@ -124,9 +124,9 @@
           <el-select v-model="data.year" placeholder="请选择">
             <el-option
               v-for="(item) in yearOptions"
-              :key="item"
-              :label="item"
-              :value="item"
+              :key="item.value"
+              :label="item.value"
+              :value="item.key"
             />
           </el-select>
         </el-form-item>
