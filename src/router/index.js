@@ -378,7 +378,11 @@ export const asyncRoutes = [
           title: '权限管理',
           roles: ['admin']
         }
-      }
+      },
+	  
+	  
+	  
+	  
     ]
   },
   { path: '*', redirect: '/404', hidden: true }
