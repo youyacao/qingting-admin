@@ -9,8 +9,8 @@
           <el-form-item label="客户密钥">
             <el-input v-model="form.safe_cy_app_key" placeholder="创宇客户密钥" />
           </el-form-item>
-          <el-form-item label="客户业务代码">
-            <el-input v-model="form.safe_cy_customer_code" placeholder="创宇客户业务代码" />
+          <el-form-item label="客户业务编码">
+            <el-input v-model="form.safe_cy_customer_code" placeholder="创宇客户业务编码" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
