@@ -328,6 +328,15 @@ export const asyncRoutes = [
           title: '基础配置',
           roles: ['admin', 'editor', 'guest']
         }
+      },
+      {
+        path: 'safe',
+        component: () => import('@/views/config/safe'),
+        name: 'Safe',
+        meta: {
+          title: '内容安全',
+          roles: ['admin', 'editor', 'guest']
+        }
       }
     ]
   },
@@ -378,11 +387,8 @@ export const asyncRoutes = [
           title: '权限管理',
           roles: ['admin']
         }
-      },
-	  
-	  
-	  
-	  
+      }
+
     ]
   },
   { path: '*', redirect: '/404', hidden: true }

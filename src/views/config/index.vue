@@ -365,7 +365,7 @@ export default {
   },
   methods: {
     async getConfig() {
-      if (this.$store.getters.username != 'demo') {
+      if (this.$store.getters.username !== 'demo') {
         const res = await getData()
         this.form = deepClone(res.data)
         this.avatar_url = res.data.base_default_avatar_url
