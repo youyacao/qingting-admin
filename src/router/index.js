@@ -68,7 +68,7 @@ export const asyncRoutes = [
     alwaysShow: true, // will always show the root menu
     name: 'user',
     meta: {
-      title: '用户管理',
+      title: '用户中心',
       icon: 'user',
       roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
     },
@@ -146,7 +146,7 @@ export const asyncRoutes = [
     alwaysShow: true, // will always show the root menu
     name: 'content',
     meta: {
-      title: '内容管理',
+      title: '内容中心',
       icon: 'component',
       roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
     },
@@ -196,7 +196,7 @@ export const asyncRoutes = [
     alwaysShow: true, // will always show the root menu
     name: 'movie',
     meta: {
-      title: '影视管理',
+      title: '影视中心',
       icon: 'tree',
       roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
     },
@@ -228,7 +228,7 @@ export const asyncRoutes = [
     alwaysShow: true, // will always show the root menu
     name: 'live',
     meta: {
-      title: '直播管理',
+      title: '直播中心',
       icon: 'international',
       roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
     },
@@ -248,6 +248,29 @@ export const asyncRoutes = [
         name: 'History',
         meta: {
           title: '直播历史',
+          roles: ['admin', 'editor', 'guest']
+        }
+      }
+    ]
+  },
+  {
+    path: '/task',
+    component: Layout,
+    redirect: '/task/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'task',
+    meta: {
+      title: '任务中心',
+      icon: 'list',
+      roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/task/index'),
+        name: 'Index',
+        meta: {
+          title: '任务列表',
           roles: ['admin', 'editor', 'guest']
         }
       }
