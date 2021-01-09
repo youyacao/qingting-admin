@@ -3,7 +3,7 @@
     <el-tabs v-model="activeTab" v-loading="loading" type="border-card">
       <el-tab-pane label="版本更新" name="version">
         <el-form ref="form" :model="form" label-width="200px">
-          <el-form-item label="开关">
+          <el-form-item label="是否强制更新">
             <el-switch v-model="form.version_force_update" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
           <el-form-item label="版本号">
