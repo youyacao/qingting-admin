@@ -360,6 +360,15 @@ export const asyncRoutes = [
           title: '内容安全',
           roles: ['admin', 'editor', 'guest']
         }
+      },
+      {
+        path: 'version',
+        component: () => import('@/views/config/version'),
+        name: 'Version',
+        meta: {
+          title: '版本更新',
+          roles: ['admin', 'editor', 'guest']
+        }
       }
     ]
   },

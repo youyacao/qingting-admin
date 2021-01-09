@@ -14,13 +14,13 @@
             <!--   <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" /> -->
 
             <h1>开发团队介绍：</h1>
-            <p>核心：后端主程兼架构师kirito涛，后台管理kirito涛，JAVA后端主程Evan双文，后端大宗师，后端jack谢，前端技术总负责W银满，大数据算法QH，安卓原生three，IOS开发麻子。
+            <p>核心：后端主程兼架构师kiro涛，后台管理kiro涛，JAVA后端主程Evan双文，后端大宗师，后端jack谢，前端技术总负责W银满，大数据算法QH，安卓原生three，IOS开发麻子。
 
-              </br>
+              <br>
 
               辅助成员：douzi，yungui,浮生若水
 
-              </br>
+              <br>
               合作伙伴：知道创宇 腾讯云 景安 涂图 美狐 七牛云 阿里云
 
             </p>
@@ -29,31 +29,31 @@
               蜻蜓系列系统介绍：
               <a href="https://songshu.youyacao.com/qingting.html" target="_blank">https://songshu.youyacao.com/qingting.html</a>
 
-              </br>
+              <br>
               蜻蜓安装教程介绍：
               <a href="https://doc.youyacao.com/web/#/8?page_id=51" target="_blank">https://doc.youyacao.com/web/#/8?page_id=51</a>
 
-              </br>
+              <br>
               蜻蜓API文档介绍：
               <a href="https://doc.youyacao.com/web/#/16?page_id=93" target="_blank">https://doc.youyacao.com/web/#/16?page_id=93</a>
 
-              </br>
+              <br>
 
               蜻蜓F影视系统介绍：
               <a href="https://songshu.youyacao.com/film.html" target="_blank">https://songshu.youyacao.com/film.html</a>
 
-              </br>
+              <br>
               YYC松鼠短视频系统：
               <a href="https://songshu.youyacao.com/video.html" target="_blank">https://songshu.youyacao.com/video.html</a>
 
-              </br>
+              <br>
               涂图原生SDK美颜插件：<a href="https://ext.dcloud.net.cn/plugin?id=3694" target="_blank">https://ext.dcloud.net.cn/plugin?id=3694</a>
-              </br>
+              <br>
               美狐原生SDK美颜插件：等待发布-即将发布
 
-              后端主程兼架构师kirito，后端大宗师，后端jack谢，前端技术总负责银满，大数据算法QH，安卓原生three，IOS开发麻子。
+              后端主程兼架构师kiro，后端大宗师，后端jack谢，前端技术总负责银满，大数据算法QH，安卓原生three，IOS开发麻子。
             </p>
-            </br>
+            <br>
 
             <h1>联系我们（微信扫码直接联系）-关注我们（公众号）：</h1>
             <p>
@@ -76,12 +76,12 @@
                 alt="微信扫码直接联系"
               >
 
-              </br>
+              <br>
 
               紧急联系QQ：央千澈 422108995 QQ 优雅草腾讯云负责 2362059584 电话13708021643
-              </br>
+              <br>
               www.youyacao.com
-              </br>
+              <br>
               Copyright ©优雅草科技 2015-2021 All rights reserved
             </p>
 
@@ -141,16 +141,11 @@
 </template>
 
 <script>
-import CountTo from 'vue-count-to'
 
 export default {
   components: {
-    CountTo
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
-    }
   }
 }
 </script>
