@@ -15,7 +15,7 @@
           <el-form-item label="版本信息">
             <el-input v-model="form.version_info" type="textarea" :rows="2" placeholder="版本信息" />
           </el-form-item>
-          <el-form-item label="版本下载链接">
+          <el-form-item label="安卓版本下载链接">
             <el-upload
               class="upload"
               :action="upAction"
@@ -32,8 +32,8 @@
               <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
-          <el-form-item label="版本下载链接（手动填写）">
-            <el-input v-model="form.version_download_url2" placeholder="版本下载链接" />
+          <el-form-item label="IOS版本下载链接">
+            <el-input v-model="form.version_download_url_ios" placeholder="版本下载链接" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -60,7 +60,7 @@ export default {
         version_name: '',
         version_info: '',
         version_download_url: '',
-        version_download_url2: ''
+        version_download_url_ios: ''
       },
       upAction: process.env.VUE_APP_BASE_API + '/up',
       upHeaders: {
