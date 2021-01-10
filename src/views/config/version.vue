@@ -233,7 +233,7 @@ export default {
       this.getList()
     },
     handleCreate() {
-      this.imgUrl = ''
+      this.fileList = []
       this.data = Object.assign({}, defaultData)
       this.dialogType = 'new'
       this.dialogVisible = true
