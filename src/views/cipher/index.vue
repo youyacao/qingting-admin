@@ -198,7 +198,7 @@ export default {
     },
     async getList() {
       this.loading = true
-      this.listQuery.listQuery = 0
+      this.listQuery.export = 0
       const res = await getDatas(this.listQuery)
       this.list = res.data.data
       this.total = res.data.total
