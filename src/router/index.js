@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
+      meta: { title: '仪表盘', icon: 'dashboard' }
     }]
   }
 ]
@@ -197,7 +197,7 @@ export const asyncRoutes = [
     name: 'movie',
     meta: {
       title: '影视中心',
-      icon: 'tree',
+      icon: 'education',
       roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
     },
     children: [
@@ -277,14 +277,37 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/cipher',
+    component: Layout,
+    redirect: '/cipher/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'cipher',
+    meta: {
+      title: '营销中心',
+      icon: 'guide',
+      roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/cipher/index'),
+        name: 'Index',
+        meta: {
+          title: '卡密列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      }
+    ]
+  },
+  {
     path: '/shop',
     component: Layout,
     redirect: '/shop/vip',
     alwaysShow: true, // will always show the root menu
     name: 'Shop',
     meta: {
-      title: '商品管理',
-      icon: 'table',
+      title: '商品中心',
+      icon: 'shopping',
       roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
     },
     children: [
@@ -315,7 +338,7 @@ export const asyncRoutes = [
     alwaysShow: true, // will always show the root menu
     name: 'advert',
     meta: {
-      title: '广告管理',
+      title: '广告中心',
       icon: 'language',
       roles: ['admin', 'editor', 'guest'] // you can set roles in root nav
     },

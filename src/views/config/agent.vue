@@ -5,7 +5,7 @@
         <el-form ref="form" :model="form" label-width="200px">
           <el-form-item label="返利账户">
             <el-select v-model="form.agent_account" placeholder="请选择">
-              <el-option v-for="item in accountOption" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="(item,index) in accountOption" :key="index" :label="item" :value="index" />
             </el-select>
           </el-form-item>
           <el-form-item label="代理级数">
@@ -28,6 +28,7 @@
 
 <script>
 import { saveData, getData } from '../../api/config'
+import { accountType } from '../../api/users'
 import { deepClone } from '../../utils'
 export default {
   data() {
@@ -74,26 +75,18 @@ export default {
           value: '5'
         }
       ],
-      accountOption: [
-        {
-          label: '余额账户',
-          value: '1'
-        },
-        {
-          label: '积分账户',
-          value: '2'
-        },
-        {
-          label: '金币账户',
-          value: '3'
-        }
-      ]
+      accountOption: []
     }
   },
   created() {
+    this.getInit()
     this.getConfig()
   },
   methods: {
+    async getInit() {
+      const res = await accountType({})
+      this.accountOption = res.data
+    },
     async getConfig() {
       if (this.$store.getters.username !== 'demo') {
         const res = await getData()

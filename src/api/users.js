@@ -70,3 +70,11 @@ export function withdrawLog(data) {
     data
   })
 }
+
+export function accountType(data) {
+  return request({
+    url: `users/accountType`,
+    method: 'post',
+    data
+  })
+}
