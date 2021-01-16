@@ -7,6 +7,11 @@
           <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
             <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
+          <el-form-item label="兑换账户">
+            <el-select v-model="listQuery.account_type" clearable placeholder="请选择">
+              <el-option v-for="(item,index) in accountOption" :key="index" :label="item" :value="index" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="卡密">
             <el-input v-model="listQuery.code" placeholder="卡密" style="width: 300px;" />
           </el-form-item>
@@ -18,6 +23,9 @@
           </el-button>
           <el-button class="filter-item" style="margin-left: 0px;" type="success" icon="el-icon-edit" @click="handleCreate">
             批量生成
+          </el-button>
+          <el-button class="filter-item" style="float: right" type="warning" icon="el-icon-download" @click="handleExport">
+            导出Execl
           </el-button>
         </div>
       </el-form>
@@ -122,9 +130,10 @@
 </template>
 
 <script>
-import { deepClone } from '@/utils'
+import { deepClone, parseTime } from '@/utils'
 import { getDatas, addData, deleteData, batchDisable } from '@/api/cipher'
 import { accountType } from '@/api/users'
+import { export_json_to_excel } from '@/vendor/Export2Excel'
 
 const defaultData = {
   id: '',
@@ -163,9 +172,10 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        status: '',
+        status: '1',
         code: '',
-        get_user_id: ''
+        get_user_id: '',
+        export: 0
       },
       batch: {
         selection: [],
@@ -188,6 +198,7 @@ export default {
     },
     async getList() {
       this.loading = true
+      this.listQuery.listQuery = 0
       const res = await getDatas(this.listQuery)
       this.list = res.data.data
       this.total = res.data.total
@@ -269,6 +280,33 @@ export default {
         type: 'success',
         message: '保存成功'
       })
+    },
+    async handleExport() {
+      this.loading = true
+      const tHeader = ['卡密']
+      const filterVal = ['code']
+      this.listQuery.export = 1
+      const res = await getDatas(this.listQuery)
+      const list = res.data
+      console.log(res.data)
+      const data = this.formatJson(filterVal, list)
+      export_json_to_excel({
+        header: tHeader,
+        data,
+        filename: '卡密文件',
+        autoWidth: true,
+        bookType: 'xlsx'
+      })
+      this.loading = false
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
     }
   }
 }
