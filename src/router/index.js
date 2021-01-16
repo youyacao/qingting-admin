@@ -362,6 +362,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'agent',
+        component: () => import('@/views/config/agent'),
+        name: 'Agent',
+        meta: {
+          title: '代理设置',
+          roles: ['admin', 'editor', 'guest']
+        }
+      },
+      {
         path: 'version',
         component: () => import('@/views/config/version'),
         name: 'Version',
