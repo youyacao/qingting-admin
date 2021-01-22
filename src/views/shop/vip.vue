@@ -105,6 +105,9 @@
         <el-form-item label="商品名称">
           <el-input v-model="data.name" placeholder="商品名称" />
         </el-form-item>
+        <el-form-item label="金额">
+          <el-input v-model="data.price" placeholder="金额" />
+        </el-form-item>
         <el-form-item label="开通月数">
           <el-select v-model="data.month" placeholder="全部" clearable style="width: 200px" class="filter-item">
             <el-option v-for="item in monthOptions" :key="item.value" :label="item.label" :value="item.value" />
@@ -147,6 +150,7 @@ const defaultData = {
   type: '',
   name: '',
   price: '',
+  month: '',
   icon: '',
   desc: '',
   pid: '',
