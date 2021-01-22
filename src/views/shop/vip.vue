@@ -43,7 +43,7 @@
         </el-table-column>
         <el-table-column align="center" label="开通月数" width="200">
           <template slot-scope="scope">
-            {{ scope.row.month }} 个月
+            {{ scope.row.month }}个月
           </template>
         </el-table-column>
         <el-table-column align="center" label="图标">
