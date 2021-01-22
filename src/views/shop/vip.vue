@@ -36,6 +36,16 @@
             {{ scope.row.name }}
           </template>
         </el-table-column>
+        <el-table-column align="center" label="金额" width="200">
+          <template slot-scope="scope">
+            {{ scope.row.price }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="开通月数" width="200">
+          <template slot-scope="scope">
+            {{ scope.row.month }} 个月
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="图标">
           <template slot-scope="scope">
             <el-popover placement="right" title="" trigger="hover">
@@ -94,6 +104,11 @@
         </el-form-item>
         <el-form-item label="商品名称">
           <el-input v-model="data.name" placeholder="商品名称" />
+        </el-form-item>
+        <el-form-item label="开通月数">
+          <el-select v-model="data.month" placeholder="全部" clearable style="width: 200px" class="filter-item">
+            <el-option v-for="item in monthOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
         </el-form-item>
         <el-form-item label="图标">
           <el-upload
@@ -168,6 +183,32 @@ export default {
         }, {
           value: 2,
           label: '开通代理'
+        }
+      ],
+      monthOptions: [
+        {
+          value: 1,
+          label: '1个月'
+        },
+        {
+          value: 3,
+          label: '3个月'
+        },
+        {
+          value: 6,
+          label: '6个月'
+        },
+        {
+          value: 12,
+          label: '12个月'
+        },
+        {
+          value: 24,
+          label: '24个月'
+        },
+        {
+          value: 36,
+          label: '36个月'
         }
       ],
       listQuery: {
