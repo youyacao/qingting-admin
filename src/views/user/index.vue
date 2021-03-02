@@ -142,9 +142,19 @@
             <el-option v-for="item in tagsOption" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
+        <el-form-item label="性别">
+          <el-select v-model="data.sex" placeholder="请选择" style="width: 400px;">
+            <el-option v-for="item in sexOption" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="是否可直播">
           <el-select v-model="data.can_live" placeholder="请选择" style="width: 400px;">
             <el-option v-for="item in canLiveOption" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否认证">
+          <el-select v-model="data.is_auth" placeholder="请选择" style="width: 400px;">
+            <el-option v-for="item in authOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -169,9 +179,11 @@ const defaultData = {
   phone: '',
   email: '',
   avatar: '',
+  sex: '0',
   vip_end_time: '',
   tags: [],
-  can_live: ''
+  can_live: '',
+  is_auth: ''
 }
 
 export default {
@@ -193,6 +205,19 @@ export default {
           label: '禁用'
         }
       ],
+      sexOption: [
+        {
+          value: 0,
+          label: '保密'
+        },
+        {
+          value: 1,
+          label: '男'
+        }, {
+          value: 2,
+          label: '女'
+        }
+      ],
       canLiveOption: [
         {
           value: 0,
@@ -200,6 +225,16 @@ export default {
         },
         {
           value: 1,
+          label: '是'
+        }
+      ],
+      authOption: [
+        {
+          value: 'NO',
+          label: '否'
+        },
+        {
+          value: 'YES',
           label: '是'
         }
       ],

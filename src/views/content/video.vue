@@ -153,6 +153,12 @@
         <el-form-item label="点赞数">
           <el-input v-model="data.like_num" placeholder="点赞数" />
         </el-form-item>
+        <el-form-item label="视频时长s">
+          <el-input v-model="data.duration" placeholder="视频时长" />
+        </el-form-item>
+        <el-form-item label="视频标签">
+          <el-input v-model="data.tags" placeholder="英文逗号分隔" />
+        </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" size="small" @click="dialogVisible=false">取 消</el-button>
@@ -180,7 +186,9 @@ const defaultData = {
   short_video_url: '',
   video_thumb_url: '',
   view_num: '',
-  like_num: ''
+  like_num: '',
+  duration: '',
+  tags: ''
 }
 
 export default {
