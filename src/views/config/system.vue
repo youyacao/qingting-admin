@@ -42,6 +42,7 @@ export default {
         agent_intro: ''
       },
       init: {
+        language: 'zh_CN',
         paste_data_images: false,
       }
     }
