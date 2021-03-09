@@ -394,6 +394,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'system',
+        component: () => import('@/views/config/system'),
+        name: 'System',
+        meta: {
+          title: '系统配置',
+          roles: ['admin', 'editor', 'guest']
+        }
+      },
+      {
         path: 'version',
         component: () => import('@/views/config/version'),
         name: 'Version',
