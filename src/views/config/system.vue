@@ -12,6 +12,17 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <el-tab-pane label="代理介绍" name="agent">
+        <el-form ref="mForm" :model="form" label-width="200px">
+          <el-form-item label="介绍">
+            <tinymce v-model="form.agent_intro" ref="tinymce"/>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -19,15 +30,24 @@
 <script>
 import { saveData, getData } from '../../api/system'
 import { deepClone } from '../../utils'
+import Tinymce from '@/components/Tinymce'
 export default {
+  components: { Tinymce },
   data() {
     return {
       activeTab: 'index',
       loading: false,
       form: {
-        pay_type: ''
+        pay_type: '',
+        agent_intro: ''
+      },
+      init: {
+        paste_data_images: false,
       }
     }
+  },
+  mounted() {
+    tinymce.init(this.init);
   },
   created() {
     this.getConfig()
