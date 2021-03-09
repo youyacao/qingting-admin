@@ -2,9 +2,9 @@
   <div class="app-container">
     <el-tabs v-model="activeTab" v-loading="loading" type="border-card">
       <el-tab-pane label="系统配置" name="index">
-        <el-form ref="form" :model="form" label-width="200px">
+        <el-form ref="mForm" :model="form" label-width="200px">
           <el-form-item label="支付方式">
-            <el-input type="textarea" v-model="form.system_pay_type" placeholder="" />
+            <el-input type="textarea" v-model="form.pay_type" placeholder="" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -25,7 +25,7 @@ export default {
       activeTab: 'index',
       loading: false,
       form: {
-        system_pay_type: ''
+        pay_type: ''
       }
     }
   },
@@ -59,27 +59,5 @@ export default {
 </script>
 
 <style>
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409EFF;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
-  text-align: center;
-}
-.avatar {
-  width: 100px;
-  height: 100px;
-  display: block;
-}
+
 </style>

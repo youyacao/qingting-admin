@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-tabs v-model="activeTab" v-loading="loading" type="border-card">
       <el-tab-pane label="护驾卫士" name="safe">
-        <el-form ref="form" :model="form" label-width="200px">
+        <el-form ref="mForm" :model="form" label-width="200px">
           <el-form-item label="开关">
             <el-switch v-model="form.safe_cy_status" active-color="#13ce66" inactive-color="#ff4949" />
           </el-form-item>
