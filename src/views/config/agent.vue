@@ -8,6 +8,9 @@
               <el-option v-for="(item,index) in accountOption" :key="index" :label="item" :value="index" />
             </el-select>
           </el-form-item>
+          <el-form-item label="邀请返现基数">
+            <el-input v-model="form.agent_back_amount" placeholder="邀请返现基数(如填100，上级返利就是乘以返利比例)" />
+          </el-form-item>
           <el-form-item label="代理级数">
             <el-select v-model="form.agent_level" placeholder="请选择" @change="changeAgent">
               <el-option v-for="item in agentOption" :key="item.value" :label="item.label" :value="item.value" />
@@ -38,6 +41,7 @@ export default {
       form: {
         agent_level: '0',
         agent_account: '0',
+        agent_back_amount: '0',
         agent_config: ''
       },
       config: [
