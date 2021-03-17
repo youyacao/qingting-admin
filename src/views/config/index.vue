@@ -36,6 +36,9 @@
           <el-form-item label="分享地址">
             <el-input v-model="form.base_share_url" />
           </el-form-item>
+          <el-form-item label="QQ群">
+            <el-input v-model="form.base_qq" />
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
             <el-button @click="onBack">返 回</el-button>
@@ -303,6 +306,7 @@ export default {
         base_gold_max_award: '',
         base_low_withdraw_gold: '',
         base_share_url: '',
+        base_qq: '',
         base_video_need_login: false,
         base_video_show_ad: '',
         base_video_free_time: '',
