@@ -1,13 +1,9 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div slot="header">标签列表</div>
+      <div slot="header">群组列表</div>
       <el-form :inline="true">
         <div class="filter-container">
-          <el-select v-model="listQuery.type" placeholder="全部" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="(item, index) in typeOptions" :key="index" :label="item" :value="index" />
-          </el-select>
-          <el-input v-model="listQuery.keyword" placeholder="关键字" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-select v-model="listQuery.status" placeholder="全部" clearable style="width: 90px" class="filter-item">
             <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
@@ -26,19 +22,14 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="类型" width="100">
-          <template slot-scope="scope">
-            {{ typeOptions[scope.row.type] }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="标签名称">
+        <el-table-column align="center" label="群组名称">
           <template slot-scope="scope">
             {{ scope.row.name }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="排序">
+        <el-table-column align="center" label="群组介绍">
           <template slot-scope="scope">
-            {{ scope.row.sort }}
+            {{ scope.row.intro }}
           </template>
         </el-table-column>
         <el-table-column align="center" label="创建时间" width="180">
@@ -48,8 +39,8 @@
         </el-table-column>
         <el-table-column align="center" label="状态" width="70">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.status == 2" type="success" size="mini">启用</el-tag>
-            <el-tag v-else-if="scope.row.status == 1" type="warning" size="mini">禁用</el-tag>
+            <el-tag v-if="scope.row.status == 1" type="success" size="mini">启用</el-tag>
+            <el-tag v-else-if="scope.row.status == 0" type="warning" size="mini">禁用</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
@@ -79,16 +70,11 @@
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑':'新增'">
       <el-form v-loading="loadingForm" :model="data" label-width="140px">
-        <el-form-item label="类型">
-          <el-select v-model="data.type" placeholder="全部" clearable style="width: 200px" class="filter-item">
-            <el-option v-for="(item, index) in typeOptions" :key="parseInt(index)" :label="item" :value="parseInt(index)" />
-          </el-select>
+        <el-form-item label="群组名称">
+          <el-input v-model="data.name" placeholder="群组名称" />
         </el-form-item>
-        <el-form-item label="标签名称">
-          <el-input v-model="data.name" placeholder="标签名称" />
-        </el-form-item>
-        <el-form-item label="排序（越小越靠前）">
-          <el-input v-model="data.sort" />
+        <el-form-item label="群组介绍">
+          <el-input type="textarea" :rows="2" v-model="data.intro" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -101,13 +87,12 @@
 
 <script>
 import { deepClone } from '@/utils'
-import { getDatas, addData, deleteData, updateData, batchDisable, getTypeOptions } from '@/api/userTags'
+import { getDatas, addData, deleteData, updateData, batchDisable } from '@/api/userGroup'
 
 const defaultData = {
   id: '',
-  type: '',
   name: '',
-  sort: ''
+  intro: ''
 }
 
 export default {
@@ -130,13 +115,9 @@ export default {
           label: '启用'
         }
       ],
-      typeOptions: [],
       listQuery: {
         page: 1,
         limit: 10,
-        keyword: '',
-        type: '',
-        order: 'DESC'
       },
       batch: {
         selection: [],
@@ -150,7 +131,6 @@ export default {
   },
   created() {
     this.getList()
-    this.handleTypeOptions()
   },
   methods: {
     async getList() {
@@ -172,12 +152,6 @@ export default {
       this.batch.status = status
       await batchDisable(this.batch)
       this.getList()
-    },
-    async handleTypeOptions() {
-      const res = await getTypeOptions()
-      if (res.code === 200) {
-        this.typeOptions = res.data
-      }
     },
     handleSelectionChange(obj) {
       this.batch.selection = []

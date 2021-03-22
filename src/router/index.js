@@ -128,6 +128,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'group',
+        component: () => import('@/views/user/group'),
+        name: 'Group',
+        meta: {
+          title: '群组列表',
+          roles: ['admin', 'editor', 'guest']
+        }
+      },
+      {
         path: 'profile',
         component: () => import('@/views/permission/profile'),
         hidden: true
