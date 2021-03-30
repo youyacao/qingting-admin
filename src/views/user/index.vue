@@ -157,6 +157,11 @@
             <el-option v-for="item in authOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
+        <el-form-item label="是否开通语音">
+          <el-select v-model="data.is_audio" placeholder="请选择" style="width: 400px;">
+            <el-option v-for="item in audioOption" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" size="small" @click="dialogVisible=false">取 消</el-button>
@@ -183,7 +188,8 @@ const defaultData = {
   vip_end_time: '',
   tags: [],
   can_live: '',
-  is_auth: ''
+  is_auth: '',
+  is_audio: ''
 }
 
 export default {
@@ -235,6 +241,16 @@ export default {
         },
         {
           value: 'YES',
+          label: '是'
+        }
+      ],
+      audioOption: [
+        {
+          value: '0',
+          label: '否'
+        },
+        {
+          value: '1',
           label: '是'
         }
       ],
