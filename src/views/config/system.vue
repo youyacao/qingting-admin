@@ -29,7 +29,7 @@
             <el-input v-model="form.policy_url" type="input" placeholder="" />
           </el-form-item>
           <el-form-item label="用户协议">
-            <tinymce2 ref="tinymce2" v-model="form.agreement" />
+            <el-input v-model="form.agreement" type="input" placeholder="" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -45,9 +45,8 @@
 import { saveData, getData } from '../../api/system'
 import { deepClone } from '../../utils'
 import Tinymce from '@/components/Tinymce'
-import Tinymce2 from '@/components/Tinymce'
 export default {
-  components: { Tinymce, Tinymce2 },
+  components: { Tinymce },
   data() {
     return {
       activeTab: 'index',
@@ -66,7 +65,6 @@ export default {
   },
   mounted() {
     Tinymce.init(this.init)
-    Tinymce2.init(this.init)
   },
   created() {
     this.getConfig()
