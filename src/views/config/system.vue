@@ -23,13 +23,13 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="用户协议" name="agreement">
+      <el-tab-pane label="用户协议" name="user_agreement">
         <el-form ref="mForm" :model="form" label-width="200px">
           <el-form-item label="隐私政策链接">
-            <el-input v-model="form.policy_url" type="input" placeholder="" />
+            <el-input v-model="form.user_policy_url" type="input" placeholder="" />
           </el-form-item>
           <el-form-item label="用户协议">
-            <el-input v-model="form.agreement" type="input" placeholder="" />
+            <el-input v-model="form.user_agreement" type="input" placeholder="" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -54,8 +54,8 @@ export default {
       form: {
         pay_type: '',
         agent_intro: '',
-        agreement: '',
-        policy_url: ''
+        user_agreement: '',
+        user_policy_url: ''
       },
       init: {
         language: 'zh_CN',
