@@ -4,7 +4,7 @@
       <el-tab-pane label="系统配置" name="index">
         <el-form ref="mForm" :model="form" label-width="200px">
           <el-form-item label="支付方式">
-            <el-input type="textarea" v-model="form.pay_type" placeholder="" />
+            <el-input v-model="form.pay_type" type="textarea" placeholder="" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -15,7 +15,21 @@
       <el-tab-pane label="代理介绍" name="agent">
         <el-form ref="mForm" :model="form" label-width="200px">
           <el-form-item label="介绍">
-            <tinymce v-model="form.agent_intro" ref="tinymce"/>
+            <tinymce ref="tinymce" v-model="form.agent_intro" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+            <el-button @click="onBack">返 回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="用户协议" name="agreement">
+        <el-form ref="mForm" :model="form" label-width="200px">
+          <el-form-item label="隐私政策链接">
+            <el-input v-model="form.policy_url" type="input" placeholder="" />
+          </el-form-item>
+          <el-form-item label="用户协议">
+            <tinymce2 ref="tinymce2" v-model="form.agreement" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
@@ -31,24 +45,28 @@
 import { saveData, getData } from '../../api/system'
 import { deepClone } from '../../utils'
 import Tinymce from '@/components/Tinymce'
+import Tinymce2 from '@/components/Tinymce'
 export default {
-  components: { Tinymce },
+  components: { Tinymce, Tinymce2 },
   data() {
     return {
       activeTab: 'index',
       loading: false,
       form: {
         pay_type: '',
-        agent_intro: ''
+        agent_intro: '',
+        agreement: '',
+        policy_url: ''
       },
       init: {
         language: 'zh_CN',
-        paste_data_images: false,
+        paste_data_images: false
       }
     }
   },
   mounted() {
-    tinymce.init(this.init);
+    Tinymce.init(this.init)
+    Tinymce2.init(this.init)
   },
   created() {
     this.getConfig()
