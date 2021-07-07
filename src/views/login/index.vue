@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">蜻蜓系统X3.5-后台管理</h3>
+        <h3 class="title">蜻蜓系统X4.2-后台管理</h3>
 
       </div>
 
@@ -51,10 +51,10 @@
 <div class="copyright"> <span @click="gw()">成都市一颗优雅草科技有限公司</span></br>
 
 
-<span @click="qtinstall()">安装教程</span> |<span @click="qtapi()">技术文档</span> |<span @click="ssgw()">官网介绍</span>
+<span @click="qtinstall()">安装教程</span> |<span @click="qtapi()">技术文档</span> |<span @click="ssgw()">官网介绍</span>|<span @click="demo()">演示大全</span>
 </br>
 <span @click="gw()">www.youyacao.com</span></br>
-<span >Copyright ©优雅草科技 2015-2021 All rights reserved</span></br>
+<span >Copyright ©一颗优雅草科技 2015-2021 All rights reserved</span></br>
 </div>
     </el-form>
   </div>
@@ -151,6 +151,14 @@ qtapi(){
 
 
     },
+
+	 demo(){
+
+	        window.open("https://doc.youyacao.com/web/#/22?page_id=457",'_blank');
+
+
+	},
+
     qtinstall(){
 
 
