@@ -39,6 +39,9 @@
           <el-form-item label="QQ群">
             <el-input v-model="form.base_qq" />
           </el-form-item>
+          <el-form-item label="推广一个用户获得观看次数">
+            <el-input v-model="form.base_share_get_free_num" />
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">保 存</el-button>
             <el-button @click="onBack">返 回</el-button>
@@ -307,6 +310,7 @@ export default {
         base_low_withdraw_gold: '',
         base_share_url: '',
         base_qq: '',
+        base_share_get_free_num: '',
         base_video_need_login: false,
         base_video_show_ad: '',
         base_video_free_time: '',
