@@ -14,15 +14,15 @@
             <!--   <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" /> -->
 
             <h1>开发团队介绍：</h1>
-            <p>核心：后端主程兼架构师kiro涛，后台管理kiro涛，JAVA后端主程Evan双文，后端大宗师，后端jack谢，前端技术总负责W银满，大数据算法QH，安卓原生three，IOS开发麻子。
+            <p>核心：后端主程兼架构师kiro涛，后台管理kiro涛，JAVA后端主程Evan双文，后端大宗师，后端jack谢，前端技术总负责W银满，大数据算法QH，安卓原生three，IOS开发麻子，原生sdk插件开发thr,flutter插件开发天辉，音视频处理flysd。
 
               <br>
 
-              辅助成员：douzi，yungui,浮生若水
+              辅助成员：风铃儿，yungui,浮生若水,奉贤,akin,nermay。
 
               <br>
-              合作伙伴：知道创宇 腾讯云 景安 涂图 美狐 七牛云 阿里云
-
+              合作伙伴：知道创宇 腾讯云 景安 涂图 美狐 七牛云 阿里云 </br>
+              极光 百度AI智能云  字节跳动·火山引擎 声网 个推
             </p>
             <h1>其他相关介绍：</h1>
             <p>
@@ -39,8 +39,10 @@
 
               <br>
 
-              蜻蜓F影视系统介绍：
-              <a href="https://songshu.youyacao.com/film.html" target="_blank">https://songshu.youyacao.com/film.html</a>
+              蜻蜓系统demo演示大全：
+
+
+              <a href="https://doc.youyacao.com/web/#/22?page_id=457" target="_blank">https://doc.youyacao.com/web/#/22?page_id=457</a>
 
               <br>
               YYC松鼠短视频系统：
@@ -49,9 +51,16 @@
               <br>
               涂图原生SDK美颜插件：<a href="https://ext.dcloud.net.cn/plugin?id=3694" target="_blank">https://ext.dcloud.net.cn/plugin?id=3694</a>
               <br>
-              美狐原生SDK美颜插件：等待发布-即将发布
 
-              后端主程兼架构师kiro，后端大宗师，后端jack谢，前端技术总负责银满，大数据算法QH，安卓原生three，IOS开发麻子。
+			  <br>
+			  字节原生SDK美颜插件：<a href="https://ext.dcloud.net.cn/plugin?id=5008" target="_blank">https://ext.dcloud.net.cn/plugin?id=5008</a>
+			  <br>
+
+			  <br>
+			  美狐原生SDK美颜插件：<a href="https://ext.dcloud.net.cn/plugin?id=3800" target="_blank">https://ext.dcloud.net.cn/plugin?id=3800</a>
+			  <br>
+
+
             </p>
             <br>
 
@@ -78,11 +87,11 @@
 
               <br>
 
-              紧急联系QQ：央千澈 422108995 QQ 优雅草腾讯云负责 2362059584 电话13708021643
+              紧急联系QQ：央千澈 422108995 QQ 优雅草腾讯云负责 2362059584 电话13708021643 19980731625 座机电话：028-61777191
               <br>
               www.youyacao.com
               <br>
-              Copyright ©优雅草科技 2015-2021 All rights reserved
+              Copyright ©一颗优雅草科技 2015-2021 All rights reserved
             </p>
 
           </div>
