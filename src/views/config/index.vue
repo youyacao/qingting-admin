@@ -39,6 +39,36 @@
           <el-form-item label="QQ群">
             <el-input v-model="form.base_qq" />
           </el-form-item>
+          <el-form-item label="QQ群二维码">
+            <el-upload
+              ref="uploadQqAvatar"
+              class="avatar-uploader"
+              :action="upAction"
+              :headers="upHeaders"
+              :limit="1"
+              :show-file-list="false"
+              :on-success="handleQqSuccess"
+              :before-upload="beforeUpload"
+            >
+              <img v-if="qq_url" :src="qq_url" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon" />
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="广告图">
+            <el-upload
+              ref="uploadAdAvatar"
+              class="avatar-uploader"
+              :action="upAction"
+              :headers="upHeaders"
+              :limit="1"
+              :show-file-list="false"
+              :on-success="handleAdSuccess"
+              :before-upload="beforeUpload"
+            >
+              <img v-if="ad_url" :src="ad_url" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon" />
+            </el-upload>
+          </el-form-item>
           <el-form-item label="推广一个用户获得观看次数">
             <el-input v-model="form.base_share_get_free_num" />
           </el-form-item>
@@ -300,6 +330,8 @@ export default {
         }
       ],
       avatar_url: '',
+      qq_url: '',
+      ad_url: '',
       upAction: process.env.VUE_APP_BASE_API + '/upload',
       upHeaders: {
         Authorization: getToken()
@@ -313,6 +345,8 @@ export default {
         base_low_withdraw_gold: '',
         base_share_url: '',
         base_qq: '',
+        base_qq_url: '',
+        base_ad_url: '',
         base_share_get_free_num: '',
         base_share_vip_free_num: '',
         base_video_need_login: false,
@@ -381,6 +415,8 @@ export default {
         const res = await getData()
         this.form = deepClone(res.data)
         this.avatar_url = res.data.base_default_avatar_url
+        this.qq_url = res.data.base_qq_url
+        this.ad_url = res.data.base_ad_url
       }
     },
     async onSubmit() {
@@ -409,6 +445,30 @@ export default {
         })
       }
       this.$refs['uploadAvatar'].clearFiles()
+    },
+    handleQqSuccess(res, file) {
+      if (res.code === 200) {
+        this.form.base_qq_url = res.data.url
+        this.qq_url = URL.createObjectURL(file.raw)
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+      }
+      this.$refs['uploadQqAvatar'].clearFiles()
+    },
+    handleAdSuccess(res, file) {
+      if (res.code === 200) {
+        this.form.base_ad_url = res.data.url
+        this.ad_url = URL.createObjectURL(file.raw)
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
+      }
+      this.$refs['uploadAdAvatar'].clearFiles()
     },
     beforeUpload(file) {
       return true
