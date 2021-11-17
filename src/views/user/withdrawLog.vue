@@ -24,6 +24,11 @@
             {{ scope.row.email }}
           </template>
         </el-table-column>
+        <el-table-column align="center" label="账号">
+          <template slot-scope="scope">
+            {{ scope.row.remark }}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="类型">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.type == 1" type="success" size="mini">余额</el-tag>
